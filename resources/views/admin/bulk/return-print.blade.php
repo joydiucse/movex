@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zxx" class="js">
+
+<head>
+    <base href="../">
+    <meta charset="utf-8">
+    <meta name="author" content="Softnio">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="csrf-token" content="{{ csrf_token() }}"/>
+    <meta name="description"
+          content="A powerful and conceptual apps base dashboard template that especially build for developers and programmers.">
+    <!-- Fav Icon  -->
+    <link rel="shortcut icon" href="{{ asset('admin/')}}/images/favicon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="{{ asset('admin/')}}/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="{{ asset('admin/')}}/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="{{ asset('admin/')}}/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('admin/')}}/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="{{ asset('admin/')}}/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="{{ asset('admin/')}}/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="{{ asset('admin/')}}/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('admin/')}}/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('admin/')}}/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"
+          href="{{ asset('admin/')}}/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('admin/')}}/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="{{ asset('admin/')}}/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('admin/')}}/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="{{ asset('admin/')}}/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="{{ asset('admin/')}}/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <!-- Page Title  -->
+    <!-- StyleSheets  -->
+    <link rel="stylesheet" href="{{ asset('admin/')}}/css/dashlite.css?ver=2.3.0">
+    <link id="skin-default" rel="stylesheet" href="{{ asset('admin/')}}/css/custom.css">
+
+    <title>{{__('parcel').' '.__('details').' '.__('print')}} | {{__('app_name')}}</title>
+    <style>
+        body{
+            background-color: #ffffff !important;
+        }
+    </style>
+</head>
+
+<body class="nk-body npc-default has-sidebar">
+<div class="nk-app-root">
+    <!-- main @s -->
+    <div class="nk-main print">
+        <div class="nk-content">
+            <div class="nk-content-inner">
+                <div class="nk-block">
+                    <div class="row g-gs">
+                        <div class="col-xxl-12 col-sm-12 col-md-12">
+                            <div class="card assign-delivery">
+                                <div class="justify-content-between d-inline-flex page-header">
+                                    <div class="right-content d-inline-flex">
+                                        <img src="{{ asset('admin/images/logo-green.png') }}" alt="logo" class="img-fluid mr-3 image">
+                                        <div class="greenx-details d-block">
+                                            <h3 class="page-title">{{__('greenX_e_courier')}}</h3>
+                                            {{ __('greenx_address') }} <br>
+                                            {{ __('app_phone_number') }}
+                                        </div>
+                                    </div>
+                                    <p class="page-title">{{ __('date').' '.date('d.m.Y') }}</p>
+                                </div>
+
+                                <div class="mt-3">
+                                    <div class="d-inline-flex print-table-parcels">
+                                        <table class="table table-striped">
+                                            <thead class="thead-dark">
+                                            <tr>
+                                                <th scope="col" class="pl-0">#</th>
+                                                <th scope="col" class="pl-0">{{ __('merchant') }}</th>
+                                                <th scope="col" class="pl-0">{{ __('Parcel_no') }}</th>
+                                                <th scope="col" class="pl-0">{{ __('Invoice_no') }}</th>
+                                                <th scope="col" class="pl-0">{{ __('merchant_address') }}</th>
+                                                <th scope="col" class="pl-0">#</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            @foreach ($parcels as $key => $parcel)
+                                                <tr>
+                                                    <td scope="col" width="3%">{{ $key+1 }}</td>
+                                                    <td scope="col" width="15%">{{ $parcel->merchant->company }}</td>
+                                                    <td scope="col" width="15%">{{ $parcel->parcel_no }}</td>
+                                                    <td scope="col" width="15%">{{ $parcel->customer_invoice_no }}</td>
+                                                    <td scope="col" width="32%">{{ $parcel->merchant->address }}</td>
+                                                    <td scope="col" width="3%"><input type="checkbox"><br/></td>
+                                                </tr>
+                                            @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {{-- <div class="font-weight-bold mt-2">
+                                        {{ __('total_cod') }}
+                                    : {{ number_format(array_sum(array_column($parcels, 'price')), 2).' '.__('tk') }}
+                                    </div> --}}
+                                </div>
+                            </div><!-- .card -->
+                                <div class="card">
+                                    <div class="signature-section justify-content-between d-flex">
+                                        <div class="signature d-block">
+                                            <div class="border"></div>
+                                            <p>{{ __('process_by') }}</p>
+                                            {{ \Sentinel::getUser()->first_name.' '.\Sentinel::getUser()->last_name }}
+                                        </div>
+                                        <div class="cod d-block text-right">
+                                            <div class="mr-3">
+                                                <div class="border "></div>
+                                            </div>
+                                            {{ __('delivery_by') }}<br>
+                                            {{ $delivery_man }}<br>
+                                        </div>
+                                        <div class="cod d-block text-right">
+                                            <div class="mr-3">
+                                                <div class="border "></div>
+                                            </div>
+                                            {{ __('merchant') }}<br>
+                                            {{ $merchant_name }}<br>
+                                        </div>
+                                    </div>
+                                </div>
+
+                        </div><!-- .col -->
+                    </div>
+                </div><!-- .nk-block -->
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- main @e -->
+</div>
+<!-- app-root @e -->
+<!-- JavaScript -->
+@include('partials.footer-assets')
+<script type="text/javascript">
+    $(document).ready(function () {
+        window.print();
+    });
+</script>
+
+</body>
+
+</html>

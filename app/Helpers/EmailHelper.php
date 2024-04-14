@@ -84,7 +84,7 @@ if (!function_exists('defaultModeCheck')) {
         if ($mode   == "") :
             Session::put('mode', '');
         endif;
-        return Session::get('mode');
+        return Session::get('mode') ;
 
     }
 }

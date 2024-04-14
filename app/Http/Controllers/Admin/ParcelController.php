@@ -593,6 +593,17 @@ class ParcelController extends Controller
                     ->orWhere('transfer_to_hub_id', \Sentinel::getUser()->hub_id);
                 });
             }
+        if($request->has('key')){
+            if ($request->key != "") {
+                $query->where('parcel_no','LIKE', '%'.$request->key.'%');
+                $query->orWhere('customer_phone_number','LIKE', '%'.$request->key.'%');
+                $parcels = $query->paginate(\Config::get('greenx.paginate'));
+
+                return view('admin.parcel.index', compact('parcels', 'cod_charges', 'charges', 'hubs','third_parties'));
+            }else{
+                return redirect()->route('parcel');
+            }
+        }
 
         if ($request->parcel_no != "") {
             $query->where('parcel_no',$request->parcel_no);

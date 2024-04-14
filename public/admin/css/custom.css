@@ -615,3 +615,59 @@
         font-size: 12px !important;
     }
 }
+
+
+.mt-2px{
+    margin-top:2px;
+}
+.mt-3px{
+    margin-top:3px;
+}
+.statusLabelButton{
+    color: #fff;
+    font-weight: 500;
+    padding: 2px 4px;
+    margin:2px 0px;
+    border-radius: 4px;
+}
+.statusLabelButton.delivered{
+    background-color: #059669;
+}
+.statusLabelButton.delivery-assigned{
+    background-color: #FF7400;
+}
+.statusLabelButton.hold{
+    background-color: #F59E0B;
+}
+.statusLabelButton.returned{
+    background-color: #DC2626;
+}
+.statusLabelButton.percel-type{
+    color: #3B82F6;
+    background-color: rgba(59, 130, 246, 0.15);
+    border:1px solid #3B82F6;
+}
+
+
+.pathao-button{
+    background: #4F46E5;
+    border-color: transparent;
+}
+.pathao-button:disabled{
+    background: rgba(79, 70, 229, 0.6);
+    border-color: transparent;
+}
+.searchbox{
+    position: relative;
+}
+.searchbox .search-input{
+    width: 260px;
+    padding-right: 40px;
+}
+.searchbox .search-icon{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: 18px;
+    color: #6e6e6e;
+}

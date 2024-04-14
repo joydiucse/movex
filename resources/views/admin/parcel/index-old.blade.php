@@ -66,7 +66,7 @@
                                 <div class="card-inner position-relative card-tools-toggle pb-0">
                                     <div class="row filter-button mb-2">
                                         <div class="col-md-12">
-                                            <a href="{{route('parcel')}}" class="badge {{(isset($slug) || request()->has('key')) ? 'text-fliter-btn':'btn-primary'}}"><span>{{__('all')}}</span></a>
+                                            <a href="{{route('parcel')}}" class="badge {{isset($slug)? 'text-fliter-btn':'btn-primary'}}"><span>{{__('all')}}</span></a>
                                             <a href="{{route('admin.parcel.filtering', 'pending')}}" class="badge {{isset($slug)? ($slug == 'pending'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{__('pending')}}</span></a>
                                             <a href="{{route('admin.parcel.filtering', 'pickup-assigned')}}" class="badge {{isset($slug)? ($slug == 'pickup-assigned'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{ __('pickup-assigned') }}</span></a>
                                             <a href="{{route('admin.parcel.filtering', 're-schedule-pickup')}}" class="badge {{isset($slug)? ($slug == 're-schedule-pickup'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{ __('re-schedule-pickup') }}</span></a>
@@ -89,7 +89,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="card-title-group my-2">
+                                    <div class="card-title-group">
                                         <div class="card-tools">
                                             <div class="d-block">
                                                 <!-- <form action="{{route('admin.parcel.filter')}}" method="GET">
@@ -113,7 +113,7 @@
                                                   </div>
                                                 </form> -->
 
-                                                <form action="{{route('admin.parcel.filter')}}" method="GET" class="form-inline mb-0">
+                                                <form action="{{route('admin.parcel.filter')}}" method="GET" class="form-inline">
 {{--                                                    @csrf--}}
                                                     {{ __('search') }}
                                                     <input type="text" name="parcel_no" class="form-control ml-2" autofocus placeholder="GNX93121876914" id="parcel_no">
@@ -123,14 +123,11 @@
                                             </div>
                                         </div><!-- .card-tools -->
 
-                                        <div class="card-tools mr-n1 d-flex align-items-center">
+
+                                        <div class="card-tools mr-n1">
                                             @if(hasPermission('read_all_parcel'))
-                                                <button type="button" class="btn btn-primary pathao-button mr-2" id="addToPathaoButton" disabled>
-                                                    <i class="fa-solid fa-circle-plus mr-1"></i>
-                                                    <span>Add to Pathao</span>
-                                                </button>
                                                 <div class="dropdown mr-2 custom-dropdown-width">
-                                                    <a href="#" class="btn  btn-primary" data-toggle="dropdown">
+                                                    <a href="#" class="btn  btn-primary mb-5 " data-toggle="dropdown">
                                                         <span>Actions</span><em class="icon ni ni-chevron-down"></em>
                                                     </a>
                                                     <div class="dropdown-menu dropdown-menu-end dropdown-menu-auto mt-1">
@@ -148,7 +145,7 @@
 
                                             <ul class="btn-toolbar gx-1">
                                                 <li>
-                                                    <form action="{{route('admin.parcel.filter')}}" method="GET" class="mb-0">
+                                                    <form action="{{route('admin.parcel.filter')}}" method="GET">
 {{--                                                        @csrf--}}
                                                         <ul class="btn-toolbar gx-1">
                                                             <li>
@@ -384,7 +381,7 @@
                                             </div>
                                             <!-- .nk-tb-item -->
                                             @foreach($parcels as $key => $parcel)
-                                                <div class="nk-tb-item {{--{{getStatusWiseColor($parcel->status, 'bgShade')}}--}}" id="row_{{$parcel->id}}">
+                                                <div class="nk-tb-item " id="row_{{$parcel->id}}">
                                                     <input type="hidden" value="{{$parcel->id}}" id="id">
 
                                                     <div class="nk-tb-col">
@@ -550,9 +547,9 @@
                                                         @elseif($parcel->status == 'transferred-received-by-hub')
                                                             <span  class="badge text-prussian">{{ __('transferred-received-by-hub') }}</span><br>
                                                         @elseif($parcel->status == 'delivery-assigned')
-                                                            <span  class="statusLabelButton delivery-assigned">{{ __('delivery-assigned') }}</span><br>
+                                                            <span  class="badge text-pear">{{ __('delivery-assigned') }}</span><br>
                                                         @elseif($parcel->status == 're-schedule-delivery')
-                                                            <span  class="statusLabelButton hold">{{ __('re-schedule-delivery') }}</span>
+                                                            <span  class="badge text-brown">{{ __('re-schedule-delivery') }}</span>
                                                             <span  class="badge">{{ ($parcel->delivery_date == date('Y-m-d')) ? __("today") : __('next_delivery') }}  {{ ($parcel->delivery_date)? date('d M Y', strtotime($parcel->delivery_date)):  '' }}</span>
                                                             <br>
                                                         @elseif($parcel->status == 'returned-to-greenx')
@@ -568,20 +565,18 @@
                                                         @elseif($parcel->status == 'partially-delivered')
                                                             <span  class="badge text-mint">{{ __('partially-delivered') }}</span><br>
                                                         @elseif($parcel->status == 'delivered')
-                                                            <span  class="statusLabelButton delivered">{{ __('delivered') }}</span><br>
+                                                            <span  class="badge text-success">{{ __('delivered') }}</span><br>
                                                         @elseif($parcel->status == 'delivered-and-verified')
                                                             <span  class="badge text-success">{{ __('delivered-and-verified') }}</span><br>
                                                         @elseif($parcel->status == 'returned-to-merchant')
                                                             @if($parcel->is_partially_delivered)
                                                                 <span  class="badge text-mint">{{ __('partially-delivered') }}</span><br>
                                                             @endif
-                                                            <span  class="statusLabelButton returned">{{ __('returned-to-merchant') }}</span><br>
+                                                            <span  class="badge text-success">{{ __('returned-to-merchant') }}</span><br>
                                                         @elseif($parcel->status == 're-request')
                                                             <span  class="badge text-warning">{{ __('re-request') }}</span><br>
                                                         @endif
-                                                        <div class="mt-3px">
-                                                            <span class="statusLabelButton percel-type">{{__($parcel->parcel_type)}}</span><br><br>
-                                                        </div>
+                                                        <span class="badge text-info">{{__($parcel->parcel_type)}}</span><br><br>
 
                                                         @if($parcel->short_url != '')
                                                             <div class="d-flex">

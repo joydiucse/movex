@@ -1,6 +1,15 @@
+@php
+    $isDevelopmentEnv=$_SERVER['SERVER_NAME']=='desk.movex-dev.com' ?? false;
+@endphp
 <div class="nk-header nk-header-fixed is-light">
     <div class="container-fluid">
-        <div class="nk-header-wrap">
+        <div class="nk-header-wrap justify-content-between">
+            @if($isDevelopmentEnv)
+                <div class="position-absolute" style="left: 40%">
+                    <h4 class="text-primary">Joy --- Development</h4>
+                </div>
+            @endif
+
             <div class="nk-menu-trigger d-xl-none ml-n1">
                 <a href="#" class="nk-nav-toggle nk-quick-nav-icon" data-target="sidebarMenu"><em class="icon ni ni-menu"></em></a>
             </div>
@@ -10,7 +19,13 @@
                 <img class="logo-dark logo-img logo-img-lg" src="{{ asset('admin/')}}/images/logo-dark.png" srcset="{{ asset('admin/')}}/images/logo-dark2x.png 2x" alt="logo-GreenX">
                 </a>
             </div><!-- .nk-header-brand -->
-            <div class="nk-header-tools">
+            <div class="searchbox">
+                <form action="{{route('admin.parcel.filter')}}" class="mb-0">
+                    <input type="text" name="key" class="form-control search-input" value="{{request()->has('key') ? request('key') : ''}}" autofocus placeholder="Search here...">
+                    <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+                </form>
+            </div>
+            <div class="nk-header-tools ml-0">
                 <ul class="nk-quick-nav">
                     <li class="dropdown user-dropdown language-dropdown">
                         <a href="#" class="dropdown-toggle mr-n1" data-toggle="dropdown">

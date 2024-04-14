@@ -32,6 +32,8 @@ use App\Http\Controllers\Admin\ExpenseController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\BankAccountController;
 use App\Http\Controllers\Admin\FundTransferController;
+use App\Http\Controllers\Admin\PathaoServiceController;
+use App\Http\Controllers\TestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,7 +46,7 @@ use App\Http\Controllers\Admin\FundTransferController;
 |
 */
 
-
+Route::get('test', [TestController::class, 'index']);
 Route::group(['middleware'=>'XSS'], function() {
 
 Route::group(
@@ -213,6 +215,12 @@ Route::group(
             Route::get('notify-pickup-man/{id}', [ParcelController::class, 'notifyPickupMan'])->name('admin.parcel.notify.pickupman');
 
             Route::get('parcel-filtering/{slug}', [ParcelController::class, 'parcelFiltering'])->name('admin.parcel.filtering');
+
+            ############### Pathao
+            Route::get('pathao/parcel-short-details', [PathaoServiceController::class, 'parcelDetails']);
+
+
+
 
             //for getting shops of selected merchant on select shop dropdown
             Route::get('shops', [ParcelController::class, 'shops'])->name('merchant.change');

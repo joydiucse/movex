@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="zxx" class="js">
+<html lang="zxx" class="js {{defaultModeCheck()=='dark-mode' ? 'dark' :'' }}">
 
 <head>
     @include('partials.header-assets')
 </head>
 
-<body class="nk-body bg-lighter npc-default has-sidebar {{defaultModeCheck()}}">
+<body class="nk-body bg-lighter npc-default has-sidebar {{defaultModeCheck()}}  ">
     <div class="nk-app-root">
         <!-- main @s -->
         <div class="nk-main ">
@@ -19,6 +19,7 @@
                 <!-- main header @e -->
                 <!-- content @s -->
                 @yield('mainContent')
+
                 <!-- content @e -->
                 <!-- footer @s -->
                 @include('partials.footer')
@@ -32,8 +33,10 @@
     <!-- JavaScript -->
     @include('partials.message')
     @include('partials.footer-assets')
+    @include('partials.modals')
 
     <input type="hidden" value="{{url('/')}}" id="url">
+
 
 
 </body>

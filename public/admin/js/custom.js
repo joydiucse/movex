@@ -838,3 +838,62 @@ $(document).ready(function () {
         $('.get-thana-union').select2("destroy")
     })
 });
+
+function tripleBase64Encode(data) {
+    return btoa(btoa(btoa(data)));
+}
+
+$(function (){
+    var baseUrl=$('#url').val();
+    $('input[name="parcel_id[]"], #all').change(function() {
+
+        if ($('input[name="parcel_id[]"]:checked').length > 0) {
+            $('#addToPathaoButton').prop('disabled', false);
+        } else {
+            $('#addToPathaoButton').prop('disabled', true);
+        }
+    });
+
+    $('#addToPathaoButton').click(function (){
+        $('#smallModalTitle').html('Add parcels to [Pathao]');
+        let html=`
+            <div class="d-flex align-items-center justify-content-center" role="status">
+                <div class="spinner-border" role="status"></div>
+            </div>
+        `;
+        $('#smallModalBody').html(html);
+        $('#smallModalFooter').html('<button type="button" onclick="addToPathao()" id="addToPathaoSubmitButton" class="btn btn-primary" disabled>Add to Pathao</button>');
+        $('#smallModal').modal('show');
+        if ($('input[name="parcel_id[]"]:checked').length > 0) {
+            var checkedValues = [];
+            $('input[name="parcel_id[]"]:checked').each(function () {
+                checkedValues.push($(this).val());
+            });
+            console.log(checkedValues);
+            $.ajax(`${baseUrl}/admin/pathao/parcel-short-details?id=${checkedValues}`).then(function (res) {
+                if(res.status===1){
+                    $('#smallModalBody').html(res.html);
+                    $('#addToPathaoSubmitButton').prop('disabled', false);
+                }else{
+
+                }
+                console.log(res)
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                console.error("Error:", errorThrown);
+            });
+        }else{
+            console.log('select ')
+        }
+    })
+
+})
+function addToPathao() {
+    $('#parcelDetails').css('opacity', '0.2');
+    $('#addToPathaoSubmitButton').prop('disabled', true);
+    let html=`
+            <div class="w-100 h-100 position-absolute absolute-top-left d-flex align-items-center justify-content-center" role="status">
+                <div class="spinner-border" role="status"></div>
+            </div>
+        `;
+    $('#smallModalBody').append(html);
+}

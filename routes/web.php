@@ -218,6 +218,7 @@ Route::group(
 
             ############### Pathao
             Route::get('pathao/parcel-short-details', [PathaoServiceController::class, 'parcelDetails']);
+            Route::get('pathao/bulk-order', [PathaoServiceController::class, 'pathaoBulkOrder']);
 
 
 

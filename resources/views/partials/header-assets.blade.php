@@ -5,6 +5,7 @@
 <meta name="csrf-token" content="{{ csrf_token() }}" />
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="baseURL" content="{{ url('/') }}">
 <meta name="robots" content="index, follow">
 <meta name="description" content="Login to Merchant Dashboard and access all of the the parcel related event, payment and relavant information." />
 <meta name="keywords" content="GreenX Login, courier, home delivery, courier service in dhaka, best courier, same day delivery, 4 hours delivery" />

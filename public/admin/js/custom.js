@@ -1,3 +1,4 @@
+var baseURL = $('meta[name="baseURL"]').attr('content');
 $(document).ready(function () {
 
     $('#switch-mode').click(function (e) {
@@ -886,14 +887,36 @@ $(function (){
         }
     })
 
+
+
 })
+
 function addToPathao() {
+    let baseUrl=$('#url').val();
     $('#parcelDetails').css('opacity', '0.2');
-    $('#addToPathaoSubmitButton').prop('disabled', true);
+    //$('#addToPathaoSubmitButton').prop('disabled', true);
     let html=`
             <div class="w-100 h-100 position-absolute absolute-top-left d-flex align-items-center justify-content-center" role="status">
                 <div class="spinner-border" role="status"></div>
             </div>
         `;
     $('#smallModalBody').append(html);
+    let selectedValues = [];
+    $('input[name="selected_parcel_id[]"]').each(function () {
+        selectedValues.push($(this).val());
+    });
+    if(selectedValues.length>0){
+        console.log('send')
+        $.ajax(`${baseUrl}/admin/pathao/bulk-order?id=${selectedValues}`).then(function (res) {
+            if(res.status===1){
+                console.log()
+            }else{
+
+            }
+            console.log(res)
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            console.error("Error:", errorThrown);
+        });
+    }
+
 }

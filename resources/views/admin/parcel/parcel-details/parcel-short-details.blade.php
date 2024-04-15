@@ -9,7 +9,10 @@
         <tbody>
         @foreach ($percel as $key=>$item)
             <tr>
-                <td class="text-center pl-2 pr-2 font-weight-bold align-middle">{{ $key+1 }}</td>
+                <td class="text-center pl-2 pr-2 font-weight-bold align-middle">
+                    {{ $key+1 }}
+                    <input type="hidden" name="selected_parcel_id[]" value="{{ $item->id }}">
+                </td>
                 <td>
                     ID: <span class="text-primary">#{{ $item->parcel_no ?? '' }}</span>
                     <div class="">

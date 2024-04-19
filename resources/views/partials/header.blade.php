@@ -20,9 +20,22 @@
                 </a>
             </div><!-- .nk-header-brand -->
             <div class="searchbox">
-                <form action="{{route('admin.parcel.filter')}}" class="mb-0">
+                @php
+                    $searchRoute='';
+                    $userType= Sentinel::getUser()->user_type ?? '';
+                    if($userType=='staff'){
+                        $searchRoute=route('admin.parcel.filter');
+                    }
+                    if($userType=='merchant'){
+                        $searchRoute=route('merchant.parcel');
+                    }
+                    if($userType=='merchant_staff'){
+                        $searchRoute=route('merchant.staff.parcel');
+                    }
+                @endphp
+                <form action="{{$searchRoute}}" class="mb-0" onsubmit="return validateGlobalSearchForm(this);">
                     <input type="text" name="key" class="form-control search-input" value="{{request()->has('key') ? request('key') : ''}}" autofocus placeholder="Search here...">
-                    <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+                    <span class="search-icon"><button class="bg-transparent border-0 p-0 search-button"><i class="fa-solid fa-magnifying-glass"></i></button></span>
                 </form>
             </div>
             <div class="nk-header-tools ml-0">

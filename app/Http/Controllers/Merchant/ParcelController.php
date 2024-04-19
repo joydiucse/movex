@@ -30,18 +30,23 @@ class ParcelController extends Controller
         $this->delivery_man     = $delivery_man;
     }
 
-    private function paginateForMerchant($limit,$pn = '', $phone_no='')
+    private function paginateForMerchant($limit,$pn = '', $phone_no='', $searchKey='')
     {
          $query = Parcel::query();
          $query->where('merchant_id', Sentinel::getUser()->merchant->id);
-         if($pn !=''):
-            $query->where('parcel_no','like','%' . $pn .'%');
-         endif;
-         if($phone_no !=''):
-            $query->where('customer_phone_number','like','%' . $phone_no .'%');
-         endif;
-
-       return   $query->orderBy('id', 'desc')->paginate($limit);
+         if($searchKey!=''){
+             $query->where('parcel_no','LIKE', "%{$searchKey}%");
+             $query->orWhere('customer_phone_number','LIKE', "%{$searchKey}%");
+             $query->orWhere('customer_name', 'LIKE', "%{$searchKey}%");
+         }else{
+             if($pn !=''):
+                 $query->where('parcel_no','like','%' . $pn .'%');
+             endif;
+             if($phone_no !=''):
+                 $query->where('customer_phone_number','like','%' . $phone_no .'%');
+             endif;
+         }
+         return   $query->orderBy('id', 'desc')->paginate($limit);
     }
 
     public function index(Request $request)
@@ -50,7 +55,8 @@ class ParcelController extends Controller
         $cod_charges    = CodCharge::all();
         $pn             = isset($request->pn) ? $request->pn : '';
         $phone_no       = isset($request->pn) ? $request->phone_no : '';
-        $parcels        = $this->paginateForMerchant(\Config::get('greenx.parcel_merchant_paginate'),trim($pn), trim($phone_no));
+        $searchKey            = isset($request->key) ? $request->key : '';
+        $parcels        = $this->paginateForMerchant(\Config::get('greenx.parcel_merchant_paginate'),trim($pn), trim($phone_no), trim($searchKey));
         return view('merchant.parcel.index', compact('parcels','cod_charges','charges','pn'));
     }
 
@@ -110,9 +116,8 @@ class ParcelController extends Controller
         $query = Parcel::query();
 
         $pn             = isset($request->pn) ? $request->pn : '';
-
-        $query->where('merchant_id', Sentinel::getUser()->merchant->id);
         $query->where('parcel_no','like','%' . $pn .'%');
+        $query->where('merchant_id', Sentinel::getUser()->merchant->id);
 
         if ($request->created_from != "") {
             $created_from = date("Y-m-d", strtotime($request->created_from));
@@ -184,7 +189,6 @@ class ParcelController extends Controller
         endif;
 
         $parcels = $query->latest()->paginate(\Config::get('greenx.parcel_merchant_paginate'));
-
         $charges        = Charge::all();
         $cod_charges    = CodCharge::all();
         return view('merchant.parcel.index', compact('parcels','cod_charges','charges','pn'));

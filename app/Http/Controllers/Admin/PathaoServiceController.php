@@ -74,7 +74,7 @@ class PathaoServiceController extends Controller
                                 $body=[
 
                                     'store_id' => 161700,
-                                    'merchant_order_id' => $item->parcel_no.'test' ?? '',
+                                    'merchant_order_id' => 'test-2'.$item->parcel_no ?? '',
                                     'sender_name' => $item->merchant->company ?? '',
                                     'sender_phone' => $item->merchant->phone_number ?? '',
                                     'recipient_name' => $item->customer_name ?? '',

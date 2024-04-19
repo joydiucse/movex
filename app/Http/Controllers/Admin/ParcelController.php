@@ -595,8 +595,10 @@ class ParcelController extends Controller
             }
         if($request->has('key')){
             if ($request->key != "") {
-                $query->where('parcel_no','LIKE', '%'.$request->key.'%');
-                $query->orWhere('customer_phone_number','LIKE', '%'.$request->key.'%');
+                $searchKey=$request->key;
+                $query->where('parcel_no','LIKE', "%{$searchKey}%");
+                $query->orWhere('customer_phone_number','LIKE', "%{$searchKey}%");
+                $query->orWhere('customer_name', 'LIKE', "%{$searchKey}%");
                 $parcels = $query->paginate(\Config::get('greenx.paginate'));
 
                 return view('admin.parcel.index', compact('parcels', 'cod_charges', 'charges', 'hubs','third_parties'));

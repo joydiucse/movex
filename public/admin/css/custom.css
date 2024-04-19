@@ -664,10 +664,16 @@
     width: 260px;
     padding-right: 40px;
 }
+.searchbox .search-button{
+    appearance: auto;
+}
+.searchbox .search-button:focus {
+    outline: none;
+}
 .searchbox .search-icon{
     position: absolute;
     right: 10px;
-    top: 10px;
+    top: 5px;
     font-size: 18px;
     color: #6e6e6e;
 }

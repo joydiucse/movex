@@ -920,3 +920,13 @@ function addToPathao() {
     }
 
 }
+
+
+function validateGlobalSearchForm(form) {
+    if (form.key.value === '') {
+        // Key is empty, prevent form submission
+        return false;
+    }
+    // Key has value, allow form submission
+    return true;
+}

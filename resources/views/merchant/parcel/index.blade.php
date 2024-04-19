@@ -50,15 +50,15 @@
                                             {{--                                                    <a href="{{route('merchant.parcel.filtering', 'pickup-assigned')}}" class="badge {{isset($slug)? ($slug == 'pickup-assigned'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{ __('pickup-assigned') }}</span></a>--}}
                                             {{--                                                    <a href="{{route('merchant.parcel.filtering', 're-schedule-pickup')}}" class="badge {{isset($slug)? ($slug == 're-schedule-pickup'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{ __('re-schedule-pickup') }}</span></a>--}}
                                             <a href="{{Sentinel::getUser()->user_type == 'merchant' ? route('merchant.parcel.filtering', 'received') : route('merchant.staff.parcel.filtering', 'received')}}" class="badge {{isset($slug)? ($slug == 'received'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{ __('received_by_warehouse') }}</span></a>
-                                            {{--                                                    <a href="{{route('merchant.parcel.filtering', 'delivery-assigned')}}" class="badge {{isset($slug)? ($slug == 'delivery-assigned'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{ __('delivery-assigned') }}</span></a>--}}
+                                            <a href="{{route('merchant.parcel.filtering', 'delivery-assigned')}}" class="badge {{isset($slug)? ($slug == 'delivery-assigned'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{ __('delivery-assigned') }}</span></a>
                                             {{--        --}}
-                                            {{--                                                    <a href="{{route('merchant.parcel.filtering', 're-schedule-delivery')}}" class="badge {{isset($slug)? ($slug == 're-schedule-delivery'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{ __('re-schedule-delivery') }}</span></a>--}}
+                                                                                                <a href="{{route('merchant.parcel.filtering', 're-schedule-delivery')}}" class="badge {{isset($slug)? ($slug == 're-schedule-delivery'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{ __('re-schedule-delivery') }}</span></a>
                                             {{--                                                    <a href="{{route('merchant.parcel.filtering', 'returned-to-greenx')}}" class="badge {{isset($slug)? ($slug == 'returned-to-greenx'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{ __('returned-to-greenx') }}</span></a>--}}
                                             {{--                                                    <a href="{{route('merchant.parcel.filtering', 'return-assigned-to-merchant')}}" class="badge {{isset($slug)? ($slug == 'return-assigned-to-merchant'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{ __('return-assigned-to-merchant') }}</span></a>--}}
                                             <a href="{{Sentinel::getUser()->user_type == 'merchant' ? route('merchant.parcel.filtering', 'delivered') : route('merchant.staff.parcel.filtering', 'delivered')}}" class="badge {{isset($slug)? ($slug == 'delivered'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{ __('delivered') }}</span></a>
                                             {{--                                                    <a href="{{route('merchant.parcel.filtering', 'returned-to-merchant')}}" class="badge {{isset($slug)? ($slug == 'returned-to-merchant'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{ __('returned-to-merchant') }}</span></a>--}}
                                             <a href="{{Sentinel::getUser()->user_type == 'merchant' ? route('merchant.parcel.filtering', 'cancel') : route('merchant.staff.parcel.filtering', 'cancel')}}" class="badge {{isset($slug)? ($slug == 'cancel'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{ __('cancelled') }}</span></a>
-                                            <a href="{{Sentinel::getUser()->user_type == 'merchant' ? route('merchant.parcel.filtering', 'deleted') :  route('merchant.staff.parcel.filtering', 'deleted')}}" class="badge {{isset($slug)? ($slug == 'deleted'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{ __('deleted') }}</span></a>
+                                            {{--<a href="{{Sentinel::getUser()->user_type == 'merchant' ? route('merchant.parcel.filtering', 'deleted') :  route('merchant.staff.parcel.filtering', 'deleted')}}" class="badge {{isset($slug)? ($slug == 'deleted'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{ __('deleted') }}</span></a>--}}
                                         </div>
                                     </div>
                                     <div class="card-title-group">
@@ -249,11 +249,12 @@
                                                 </div>
 
                                                 <div class="nk-tb-col">
+                                                    @php $phoneNumber='' @endphp
                                                     <a href="{{ Sentinel::getUser()->user_type == 'merchant' ? route('merchant.parcel.detail',$parcel->parcel_no) : route('merchant.staff.parcel.detail',$parcel->parcel_no) }}">
                                                         <table>
                                                             <tr><td>{{__('id')}}:#{{ $parcel->parcel_no }}</td></tr>
                                                             <tr><td>{{__('invno')}}:{{$parcel->customer_invoice_no}}</td></tr>
-                                                            <tr><td>{{$parcel->created_at != ""? date('M d, Y h:i a', strtotime($parcel->created_at)):''}}</td></tr>
+                                                            {{--<tr><td>{{$parcel->created_at != ""? date('M d, Y h:i a', strtotime($parcel->created_at)):''}}</td></tr>--}}
                                                             @if($parcel->parcel_type == 'frozen')
                                                                 <tr><td class="text-primary">{{__('pickup')}}: {{$parcel->pickup_date != ""? date('M d, Y', strtotime($parcel->pickup_date)):''}} {{$parcel->pickup_time != ""? date('h:i a', strtotime($parcel->pickup_time)):''}}</td></tr>
                                                                 <tr><td class="text-primary">{{__('delivery')}}: {{$parcel->delivery_date != ""? date('M d, Y', strtotime($parcel->delivery_date)):''}} {{$parcel->pickup_time != ""? date('h:i a', strtotime($parcel->pickup_time)):''}}</td></tr>
@@ -264,27 +265,49 @@
                                                             @if($parcel->status == 'delivered' || $parcel->status == 'delivered-and-verified')
                                                                 <tr><td class="text-primary">{{__('delivered_at')}}: {{$parcel->event != ""? date('M d, Y g:i A', strtotime($parcel->event->created_at)):''}}</td></tr>
                                                                 <tr><td class="text-primary">{{__('delivered_by')}}: {{$parcel->deliveryMan->user->first_name.' '.$parcel->deliveryMan->user->last_name}}</td></tr>
+                                                                @php $phoneNumber=$parcel->deliveryMan->user->phone_number @endphp
                                                             @endif
                                                             @if($parcel->status == 'received')
                                                                 <tr><td class="text-primary">{{__('pickup_by')}}: {{$parcel->pickupMan->user->first_name.' '.$parcel->pickupMan->user->last_name}}</td></tr>
+                                                                @php $phoneNumber=$parcel->pickupMan->user->phone_number @endphp
                                                             @endif
                                                             @if($parcel->status == 'pickup-assigned' || $parcel->status == 're-schedule-pickup')
                                                                 {{--                                                                .date('M d, Y g:i A', strtotime($parcel->pickupPerson->created_at))--}}
                                                                 <tr><td class="text-primary">{{__('pickup_man')}}: {{$parcel->pickupMan != ""? ($parcel->pickupMan->user->first_name.' '.$parcel->pickupMan->user->last_name ):''}}</td></tr>
+                                                                @php $phoneNumber=$parcel->pickupMan->user->phone_number @endphp
                                                             @endif
                                                             @if($parcel->status == 'return-assigned-to-merchant')
                                                                 <tr><td class="text-primary">{{__('returned_at')}}: {{$parcel->event != ""? date('M d, Y h:i a', strtotime($parcel->event->created_at)):''}}</td></tr>
                                                                 <tr><td class="text-primary">{{__('return_delivery_man')}}: {{$parcel->returnDeliveryMan != ""? ($parcel->returnDeliveryMan->user->first_name.' '.$parcel->returnDeliveryMan->user->last_name ):''}}</td></tr>
+                                                                @php $phoneNumber=$parcel->returnDeliveryMan->user->phone_number @endphp
                                                             @endif
                                                             @if($parcel->status == 'returned-to-merchant')
                                                                 <tr><td class="text-primary">{{__('returned_at')}}: {{$parcel->returnEvent != ""? date('M d, Y h:i a', strtotime($parcel->returnEvent->created_at)):''}}</td></tr>
                                                                 <tr><td class="text-primary">{{__('returned_by')}}: {{$parcel->returnDeliveryMan != ""? ($parcel->returnDeliveryMan->user->first_name.' '.$parcel->returnDeliveryMan->user->last_name ):''}}</td></tr>
+                                                                @php $phoneNumber=$parcel->returnDeliveryMan->user->phone_number @endphp
                                                             @endif
                                                             @if(($parcel->status == 'delivery-assigned' || $parcel->status == 're-schedule-delivery') && $parcel->location == 'dhaka')
                                                                 <tr><td class="text-primary">{{__('delivery_man')}}: {{$parcel->deliveryMan != ""? ($parcel->deliveryMan->user->first_name.' '.$parcel->deliveryMan->user->last_name ):''}}</td></tr>
+                                                                @php $phoneNumber=$parcel->deliveryMan->user->phone_number @endphp
                                                             @endif
                                                         </table>
                                                     </a>
+                                                    @if($phoneNumber!='')
+                                                        <tr>
+                                                            <td class="">
+                                                                @php $mobileCopyId=$parcel->parcel_no.'_'.$phoneNumber @endphp
+                                                                <span class="text-primary fw-bold">Mobile: <input type="text" class="mobileToCopy text-primary  fw-bold" readonly id="{{$mobileCopyId}}" value="{{$phoneNumber}}" data-original-title="{{__('copy')}}" onclick="copyInput('{{ $mobileCopyId }}')" data-text="Copied Phone Number"></span>
+                                                                <a href="tel:{{ $phoneNumber }}" type="button" class="callButtonRounded"><em class="fa-solid fa-phone"></em></a>
+                                                            </td>
+                                                            {{--<td class="text-primary">
+                                                                <div class="copy-to-clipboard">
+                                                                    <input readonly type="text" class="text-primary small-device" id="{{ $parcel->percel_id.$phoneNumber }}" data-text="{{ __('copied') }}" value="{{$phoneNumber}}">
+                                                                    <a  href="javascript:void(0)" class="btn btn-sm btn-secondary track-url btn-tooltip" data-original-title="{{__('copied')}}"  onclick="compytracking('{{$parcel->percel_id.$phoneNumber}}')" data-text="{{ __('copied') }}"><em class="icon ni ni-copy"></em></a>
+                                                                </div>
+                                                            </td>--}}
+
+                                                        </tr>
+                                                    @endif
                                                 </div>
 
                                                 <div class="nk-tb-col tb-col-lg column-max-width">
@@ -293,20 +316,26 @@
                                                         <tr><td>{{ (@$parcel->merchant_id == 1802 && $parcel->user->user_type == 'merchant_staff' ) ? $parcel->user->phone_number : $parcel->merchant->phone_number}}</td></tr>
                                                         <tr><td>{{ @$parcel->pickup_address }}</td></tr>
                                                         <tr>
-                                                            <td>
-                                                                <table class="text-primary" width="100%">
+                                                            <td class="text-primary">
+                                                                <p class="mb-0">{{__('weight').': '. $parcel->weight . __('kg')}}</p>
+                                                                <p class="mb-0">{{__('charge').': '. number_format($parcel->total_delivery_charge,2).__('tk')}}</p>
+                                                                <p class="mb-0">{{__('COD').': '. number_format($parcel->price,2) . __('tk')}}</p>
+                                                                <p class="mb-0">{{__('payable').': '. number_format($parcel->payable,2).__('tk')}}</p>
+                                                                {{--<table class="text-primary" width="100%">
                                                                     <tr>
-                                                                        <td width="50%">{{__('weight').': '. $parcel->weight . __('kg')}}</td>
-                                                                        <td width="50%">{{__('charge').': '. number_format($parcel->total_delivery_charge,2).__('tk')}}</td>
+                                                                        <td width="50%"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width="50%"></td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td width="50%">{{__('COD').': '. number_format($parcel->price,2) . __('tk')}}</td>
-                                                                        <td width="50%">{{__('payable').': '. number_format($parcel->payable,2).__('tk')}}</td>
+                                                                        <td width="50%"></td>
                                                                     </tr>
-                                                                    <tr>
+                                                                    --}}{{--<tr>
                                                                         <td width="50%">{{__('selling_price').': '. number_format($parcel->selling_price,2).__('tk')}}</td>
-                                                                    </tr>
-                                                                </table>
+                                                                    </tr>--}}{{--
+                                                                </table>--}}
 
                                                             </td>
                                                         </tr>
@@ -329,12 +358,14 @@
                                                     </table>
                                                 </div>
                                                 <div class="nk-tb-col column-max-width">
+                                                    @php $holdNote=''; @endphp
                                                     @if($parcel->status == 'pending')
                                                         <span  class="badge text-warning">{{ __($parcel->status) }}</span><br>
                                                     @elseif($parcel->status == 'deleted')
                                                         <span  class="badge text-danger">{{ __('deleted') }}</span><br>
                                                     @elseif($parcel->status == 'cancel')
-                                                        <span  class="badge text-danger">{{ __('cancelled') }}</span><br>
+                                                        <span  class="statusLabelButton red">{{ __('cancelled') }}</span>
+                                                        <div  class="statusLabelNote red mt-1 mb-2"> <b>Reason:</b> {{ $parcel->cancelnote->cancel_note ?? 'N/A' }}</div>
                                                     @elseif($parcel->status == 'pickup-assigned')
                                                         <span  class="badge text-pink">{{ __('pickup-assigned') }}</span><br>
                                                     @elseif($parcel->status == 're-schedule-pickup')
@@ -348,38 +379,41 @@
                                                     @elseif($parcel->status == 'transferred-received-by-hub')
                                                         <span  class="badge text-prussian">{{ __('transferred-received-by-hub') }}</span><br>
                                                     @elseif($parcel->status == 'delivery-assigned')
-                                                        @if($parcel->location == 'dhaka')
-                                                            <span  class="badge text-pear">{{ __('delivery-assigned') }}</span><br>
-                                                        @else
-                                                            <span  class="badge text-pear">{{ __('in_transit') }}</span><br>
-                                                        @endif
+                                                        <span  class="statusLabelButton orange">{{ __('delivery-assigned') }}</span><br>
                                                     @elseif($parcel->status == 're-schedule-delivery')
-                                                        <span  class="badge text-brown">{{ __('re-schedule-delivery') }}</span><br>
+                                                        <span  class="statusLabelButton yellow">{{ __('re-schedule-delivery') }}</span>
+                                                        <span  class="badge">{{ ($parcel->delivery_date == date('Y-m-d')) ? __("today") : __('next_delivery') }}  {{ ($parcel->delivery_date)? date('d M Y', strtotime($parcel->delivery_date)):  '' }}</span>
+                                                        @php $holdNote=$parcel->holdNote->cancel_note ?? 'N/A'; @endphp
+                                                        <div  class="statusLabelNote yellow mt-1 mb-1"> <b>Note:</b> {{ $parcel->holdNote->cancel_note ?? 'N/A' }}</div>
                                                     @elseif($parcel->status == 'returned-to-greenx')
                                                         @if($parcel->is_partially_delivered)
                                                             <span  class="badge text-mint">{{ __('partially-delivered') }}</span><br>
                                                         @endif
-                                                        <span  class="badge text-warning">{{ __('returned-to-greenx') }}</span><br>
+                                                        <span  class="statusLabelButton red">{{ __('returned-to-greenx') }}</span>
+                                                        <div  class="statusLabelNote red mt-1 mb-2"> <b>Reason:</b> {{ $parcel->cancelnote->cancel_note ?? 'N/A' }}</div>
                                                     @elseif($parcel->status == 'return-assigned-to-merchant')
                                                         @if($parcel->is_partially_delivered)
                                                             <span  class="badge text-mint">{{ __('partially-delivered') }}</span><br>
                                                         @endif
-                                                        <span  class="badge text-indigo">{{ __('return-assigned-to-merchant') }}</span><br>
+                                                        <span  class="statusLabelButton red">{{ __('return-assigned-to-merchant') }}</span><br>
                                                     @elseif($parcel->status == 'partially-delivered')
                                                         <span  class="badge text-mint">{{ __('partially-delivered') }}</span><br>
                                                     @elseif($parcel->status == 'delivered')
-                                                        <span  class="badge text-success">{{ __('delivered') }}</span><br>
+                                                        <span  class="statusLabelButton green">{{ __('delivered') }}</span><br>
                                                     @elseif($parcel->status == 'delivered-and-verified')
                                                         <span  class="badge text-success">{{ __('delivered-and-verified') }}</span><br>
                                                     @elseif($parcel->status == 'returned-to-merchant')
                                                         @if($parcel->is_partially_delivered)
                                                             <span  class="badge text-mint">{{ __('partially-delivered') }}</span><br>
                                                         @endif
-                                                        <span  class="badge text-success">{{ __('returned-to-merchant') }}</span><br>
+                                                        <span  class="statusLabelButton red">{{ __('returned-to-merchant') }}</span>
+                                                        <div  class="statusLabelNote red mt-1 mb-2"> <b>Reason:</b> {{ $parcel->cancelnote->cancel_note ?? 'N/A' }}</div>
                                                     @elseif($parcel->status == 're-request')
                                                         <span  class="badge text-warning">{{ __('re-request') }}</span><br>
                                                     @endif
-                                                    <span class="badge text-info">{{__($parcel->parcel_type)}}</span><br><br>
+                                                    <div class="mt-3px">
+                                                        <span class="statusLabelButton percel-type">{{__($parcel->parcel_type)}}</span><br><br>
+                                                    </div>
 
                                                     @if($parcel->short_url != '')
                                                             <div class="d-flex">
@@ -388,7 +422,7 @@
                                                                     <input readonly type="text" class="text-primary small-device" id="{{ $parcel->short_url }}" data-text="{{ __('copied') }}" value="{{__($parcel->short_url)}}">
                                                                     <a  href="javascript:void(0)" class="btn btn-sm btn-secondary track-url btn-tooltip" data-original-title="{{__('copied')}}"  onclick="compytracking('{{__($parcel->short_url)}}')" data-text="{{ __('copied') }}"><em class="icon ni ni-copy"></em></a>
                                                                 </div>
-                                                            </div> <br><br>
+                                                            </div> <br>
                                                     @endif
                                                     @if($parcel->note !="" && $parcel->note !=NULL)
                                                         <span>{{ __('note') }}: {{__($parcel->note)}}</span>
@@ -562,7 +596,7 @@
     @include('common.change-status-ajax')
     @include('merchant.parcel.change-parcel-status')
 
-    <script> 
+    <script>
         function compytracking(track_url)
         {
             var copyText = document.getElementById(track_url);

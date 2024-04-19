@@ -571,6 +571,8 @@ Route::group(
             Route::post('parcel-update', [MerchantParcelController::class, 'update'])->name('merchant.parcel.update');
             Route::any('parcel-filter', [MerchantParcelController::class, 'filter'])->name('merchant.parcel.filter');
             Route::get('parcel-detail/{id}', [MerchantParcelController::class, 'detail'])->name('merchant.parcel.detail');
+            Route::get('returned-parcels-list', [MerchantParcelController::class, 'returnedList'])->name('merchant.parcel.return-list');
+            Route::get('returned-parcels-list/{batch_no}', [MerchantParcelController::class, 'returnedView'])->name('merchant.parcel.return-list.view');
 
             Route::get('parcel-status-update/{id}/{status}', [MerchantParcelController::class, 'parcelStatusUpdate']);
 

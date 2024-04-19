@@ -7,13 +7,18 @@ use App\Exports\FilteredParcel;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Parcel\ParcelStoreRequest;
 use App\Http\Requests\Admin\Parcel\ParcelUpdateRequest;
+use App\Models\BulkReturn;
 use App\Models\Charge;
 use App\Models\CodCharge;
+use App\Models\DeliveryMan;
+use App\Models\Merchant;
 use App\Models\Parcel;
+use App\Models\SmsTemplate;
 use App\Repositories\Interfaces\DeliveryManInterface;
 use App\Repositories\Interfaces\ParcelInterface;
 use App\Traits\ApiReturnFormatTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Sentinel;
 
@@ -34,10 +39,13 @@ class ParcelController extends Controller
     {
          $query = Parcel::query();
          $query->where('merchant_id', Sentinel::getUser()->merchant->id);
+
          if($searchKey!=''){
-             $query->where('parcel_no','LIKE', "%{$searchKey}%");
-             $query->orWhere('customer_phone_number','LIKE', "%{$searchKey}%");
-             $query->orWhere('customer_name', 'LIKE', "%{$searchKey}%");
+             $query->where(function($query) use ($searchKey) {
+                 $query->where('parcel_no', 'LIKE', "%{$searchKey}%")
+                     ->orWhere('customer_phone_number', 'LIKE', "%{$searchKey}%")
+                     ->orWhere('customer_name', 'LIKE', "%{$searchKey}%");
+             });
          }else{
              if($pn !=''):
                  $query->where('parcel_no','like','%' . $pn .'%');
@@ -46,6 +54,7 @@ class ParcelController extends Controller
                  $query->where('customer_phone_number','like','%' . $phone_no .'%');
              endif;
          }
+
          return   $query->orderBy('id', 'desc')->paginate($limit);
     }
 
@@ -59,6 +68,55 @@ class ParcelController extends Controller
         $parcels        = $this->paginateForMerchant(\Config::get('greenx.parcel_merchant_paginate'),trim($pn), trim($phone_no), trim($searchKey));
         return view('merchant.parcel.index', compact('parcels','cod_charges','charges','pn'));
     }
+    public function returnedList(Request $request)
+    {
+
+        $status= isset($request->status) ? $request->status : '';
+
+        $query = BulkReturn::query();
+        $query->where('merchant_id', Sentinel::getUser()->merchant->id);
+        if($status!='' && $status!='all'){
+            $query->where('status', $status);
+        }
+        $query->orderBy('id', 'desc');
+        $parcels=$query->paginate(\Config::get('greenx.paginate'));;
+        $val = 1;
+        return view('merchant.parcel.return-list.index', compact('parcels',  'val'));
+
+    }
+    public function returnedView(Request $request, $batch_no)
+    {
+
+        $bulk_return = bulkReturn::where('batch_no', $batch_no)->first();
+        $return_list= DB::table('parcel_returns as pr')
+            ->selectRaw('m.company,  pr.merchant_id, p.parcel_no, m.address, u.first_name, u.last_name, p.customer_invoice_no, p.id, p.status, p.is_partially_delivered, p.customer_name, p.customer_phone_number')
+            ->join('merchants as m', 'm.id', 'pr.merchant_id')
+            ->join('delivery_men as dm', 'dm.id', 'pr.return_man_id')
+            ->join('users as u', 'u.id', 'dm.user_id')
+            ->join('parcels as p', 'p.parcel_no', 'pr.parcel_no')
+            ->join('bulk_returns as br', 'br.batch_no', 'pr.batch_no')
+            ->where('pr.batch_no', $batch_no)
+            ->where('pr.status' , "!=", "reversed")
+            ->get();
+        $merchant = Merchant::find($bulk_return->merchant_id);
+        $delivery_man = DeliveryMan::find($bulk_return->delivery_man_id);
+        $return_sms = SmsTemplate::where('subject','parcel_otp_event')->first();
+        $val= 1;
+        $data = [
+            'return_list' => $return_list,
+            'val' => 1,
+            'merchant_name' => $merchant->company,
+            "id" => $bulk_return->merchant_id,
+            "delivery_man" => $delivery_man,
+            "batch_no" => $batch_no,
+            "merchant"  => $merchant,
+            'bulk_return' => $bulk_return,
+            "return_sms" => $return_sms
+        ];
+        return view('merchant.parcel.return-list.view', $data);
+
+    }
+
 
     public function create()
     {

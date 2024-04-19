@@ -227,25 +227,13 @@
                                 <span class="nk-menu-icon"><em class="icon ni ni-package"></em></span>
                                 <span class="nk-menu-text">{{__('parcels')}}</span>
                             </a>
-                        </li><!-- .nk-menu-item -->
-                        {{--@if(hasPermission('parcel_return_assigned_to_merchant'))--}} {{--//TODO: TODAY--}}
-                            <li class="nk-menu-item has-sub">
-                                <a href="#" class="nk-menu-link nk-menu-toggle">
-                                    <span class="nk-menu-icon"><em class="icon ni ni-tranx"></em></span>
-                                    <span class="nk-menu-text">{{__('return')}}</span>
-                                </a>
-                                <ul class="nk-menu-sub">
-                                    <li class="nk-menu-item">
-                                        <a href="{{route('parcel.return')}}" class="nk-menu-link"><span class="nk-menu-text">{{__('parcel_return')}}</span></a>
-                                    </li>
-                                    @if(hasPermission('return_read'))
-                                        <li class="nk-menu-item">
-                                            <a href="{{route('parcel.return.list')}}" class="nk-menu-link"><span class="nk-menu-text">{{__('bulk_returns')}}</span></a>
-                                        </li>
-                                    @endif
-                                </ul><!-- .nk-menu-sub -->
-                            </li><!-- .nk-menu-item -->
-                        {{--@endif--}}
+                        </li>
+                        <li class="nk-menu-item">
+                            <a href="{{ route('merchant.parcel.return-list') }}" class="nk-menu-link">
+                                <span class="nk-menu-icon"><em class="icon ni ni-tranx"></em></span>
+                                <span class="nk-menu-text">{{__('return')}}</span>
+                            </a>
+                        </li>
                         <li class="nk-menu-item">
                             <a href="{{route('merchant.withdraw')}}" class="nk-menu-link">
                                 <span class="nk-menu-icon"><em class="icon ni ni-wallet-out"></em></span>
@@ -518,4 +506,6 @@
 
 
 
+{{--
 images, users, merchant
+--}}

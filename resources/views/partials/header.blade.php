@@ -4,11 +4,11 @@
 <div class="nk-header nk-header-fixed is-light">
     <div class="container-fluid">
         <div class="nk-header-wrap justify-content-between">
-            @if($isDevelopmentEnv)
+            {{--@if($isDevelopmentEnv)
                 <div class="position-absolute" style="left: 40%">
                     <h4 class="text-primary">Joy --- Development</h4>
                 </div>
-            @endif
+            @endif--}}
 
             <div class="nk-menu-trigger d-xl-none ml-n1">
                 <a href="#" class="nk-nav-toggle nk-quick-nav-icon" data-target="sidebarMenu"><em class="icon ni ni-menu"></em></a>
@@ -19,25 +19,47 @@
                 <img class="logo-dark logo-img logo-img-lg" src="{{ asset('admin/')}}/images/logo-dark.png" srcset="{{ asset('admin/')}}/images/logo-dark2x.png 2x" alt="logo-GreenX">
                 </a>
             </div><!-- .nk-header-brand -->
-            <div class="searchbox">
-                @php
-                    $searchRoute='';
-                    $userType= Sentinel::getUser()->user_type ?? '';
-                    if($userType=='staff'){
-                        $searchRoute=route('admin.parcel.filter');
-                    }
-                    if($userType=='merchant'){
-                        $searchRoute=route('merchant.parcel');
-                    }
-                    if($userType=='merchant_staff'){
-                        $searchRoute=route('merchant.staff.parcel');
-                    }
-                @endphp
-                <form action="{{$searchRoute}}" class="mb-0" onsubmit="return validateGlobalSearchForm(this);">
-                    <input type="text" name="key" class="form-control search-input" value="{{request()->has('key') ? request('key') : ''}}" autofocus placeholder="Search here...">
-                    <span class="search-icon"><button class="bg-transparent border-0 p-0 search-button"><i class="fa-solid fa-magnifying-glass"></i></button></span>
-                </form>
+            <div class="w-100">
+                <div class="headerSearchboxWrap d-flex justify-content-center">
+                    <div class="searchbox">
+                        @php
+                            $searchRoute='';
+                            $userType= Sentinel::getUser()->user_type ?? '';
+                            if($userType=='staff'){
+                                $searchRoute=route('admin.parcel.filter');
+                            }
+                            if($userType=='merchant'){
+                                $searchRoute=route('merchant.parcel');
+                            }
+                            if($userType=='merchant_staff'){
+                                $searchRoute=route('merchant.staff.parcel');
+                            }
+                        @endphp
+                        <form action="{{$searchRoute}}" class="mb-0" onsubmit="return validateGlobalSearchForm(this);">
+                            <input type="text" name="key" class="form-control search-input" value="{{request()->has('key') ? request('key') : ''}}" autofocus placeholder="Search here...">
+                            <span class="search-icon"><button class="bg-transparent border-0 p-0 search-button"><i class="fa-solid fa-magnifying-glass"></i></button></span>
+                        </form>
+                    </div>
+                    @if(Sentinel::getUser()->user_type == 'merchant')
+                        @php
+                            $balance=0;
+                            if(Sentinel::getUser()->user_type == 'merchant'){
+                                $balance=number_format(Sentinel::getUser()->merchant->balance(\Sentinel::getUser()->merchant->id),2);
+                            }else{
+                                $balance=number_format(Sentinel::getUser()->balance(\Sentinel::getUser()->staffMerchant->id),2);
+                            }
+                        @endphp
+                        <div class="ml-3 position-relative">
+                            <p class="text-primary position-absolute w-250px pt-1">
+                                <span id="balance" class="d-none">Balance: {{$balance}} <span class="">TK</span></span>
+                                <span id="showBalance" onclick="toggleShowBalance()">Show Balance</span>
+                            </p>
+                        </div>
+                    @endif
+                </div>
+
             </div>
+
             <div class="nk-header-tools ml-0">
                 <ul class="nk-quick-nav">
                     <li class="dropdown user-dropdown language-dropdown">

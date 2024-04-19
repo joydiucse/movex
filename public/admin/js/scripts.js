@@ -126,7 +126,7 @@
         }else{
           $("#report-main").removeClass("active current-page");
         }
-        
+
 
 
 
@@ -134,19 +134,18 @@
     $(_link).each(function () {
       var self = $(this),
           _self_link = self.attr('href');
-
       if (fileName.match(_self_link)) {
         count++;
         self.closest("li").addClass('active current-page').parents().closest("li").addClass("active current-page");
         self.closest("li").children('.nk-menu-sub').css('display', 'block');
         self.parents().closest("li").children('.nk-menu-sub').css('display', 'block');
-  
+
       } else {
         self.closest("li").removeClass('active current-page').parents().closest("li:not(.current-page)").removeClass("active");
       }
     });
 
-  
+
 
     if(count == 0){
 
@@ -192,7 +191,7 @@
 
   NioApp.PassSwitch = function () {
     NioApp.Passcode('.passcode-switch');
-  }; // Toastr Message @v1.0 
+  }; // Toastr Message @v1.0
 
 
   NioApp.Toast = function (msg, ttype, opt) {

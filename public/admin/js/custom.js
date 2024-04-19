@@ -636,7 +636,22 @@ function copyInput(element) {
         position: 'top-right'
     });
 }
-
+/*function copyToClipboard(text) {
+    try {
+        navigator.clipboard.writeText(text)
+            .then(() => {
+                NioApp.Toast(text+': '+$('#'+element).val(), 'success',{
+                    position: 'top-right'
+                });
+            })
+            .catch((error) => {
+                showAlert('Unable to copy text to clipboard:', error);
+                // console.error('Unable to copy text to clipboard:', error);
+            });
+    } catch (error) {
+        console.error('Clipboard API not supported:', error);
+    }
+}*/
 $('.sms-provider').on('change', function () {
     if ($(this).val() === "onnorokom") {
         $(".onnorokom").removeClass('d-none');
@@ -846,7 +861,7 @@ function tripleBase64Encode(data) {
 
 $(function (){
     var baseUrl=$('#url').val();
-    $('input[name="parcel_id[]"], #all').change(function() {
+    /*$('input[name="parcel_id[]"], #all').change(function() {
 
         if ($('input[name="parcel_id[]"]:checked').length > 0) {
             $('#addToPathaoButton').prop('disabled', false);
@@ -885,7 +900,7 @@ $(function (){
         }else{
             console.log('select ')
         }
-    })
+    })*/
 
 
 
@@ -922,11 +937,7 @@ function addToPathao() {
 }
 
 
-function validateGlobalSearchForm(form) {
-    if (form.key.value === '') {
-        // Key is empty, prevent form submission
-        return false;
-    }
-    // Key has value, allow form submission
-    return true;
+function toggleShowBalance() {
+    $("#balance").removeClass("d-none");
+    $("#showBalance").html("");
 }

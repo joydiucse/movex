@@ -13,6 +13,10 @@
 @endsection
 
 @section('mainContent')
+    @php
+        $pn = isset($_GET['parcel_no']) ? $_GET['parcel_no'] : null;
+        $phone_no = isset($_GET['phone_no']) ? $_GET['phone_no'] : null;
+    @endphp
     <div class="nk-content ">
         <div class="container-fluid">
             <div class="nk-content-inner">
@@ -116,8 +120,8 @@
                                                 <form action="{{route('admin.parcel.filter')}}" method="GET" class="form-inline mb-0">
 {{--                                                    @csrf--}}
                                                     {{ __('search') }}
-                                                    <input type="text" name="parcel_no" class="form-control ml-2" autofocus placeholder="GNX93121876914" id="parcel_no">
-                                                    <input type="text" name="phone_no" class="form-control ml-2" placeholder="01711111111" id="phone_no">
+                                                    <input type="text" name="parcel_no" class="form-control ml-2" value="{{ $pn }}" autofocus placeholder="GNX93121876914" id="parcel_no">
+                                                    <input type="text" name="phone_no" value="{{ $phone_no }}" class="form-control ml-2" placeholder="01711111111" id="phone_no">
                                                     <input type="submit" hidden />
                                                 </form>
                                             </div>
@@ -125,7 +129,7 @@
 
                                         <div class="card-tools mr-n1 d-flex align-items-center">
                                             @if(hasPermission('read_all_parcel'))
-                                                <button type="button" class="btn btn-primary pathao-button mr-2" id="addToPathaoButton" disabled>
+                                                <button type="button" class="btn btn-primary pathao-button mr-2 d-none" id="addToPathaoButton" disabled>
                                                     <i class="fa-solid fa-circle-plus mr-1"></i>
                                                     <span>Add to Pathao</span>
                                                 </button>
@@ -398,6 +402,7 @@
                                                     </div>
 
                                                     <div class="nk-tb-col column-max-width">
+                                                        @php $phoneNumber='' @endphp
                                                         <a href="{{ route('admin.parcel.detail',$parcel->parcel_no) }}">
                                                             <table>
                                                                 <tr>
@@ -421,16 +426,16 @@
                                                                     @endif
                                                                     @if(!blank($parcel->transferDeliveryMan))
                                                                         <tr><td>{{__('transferring_by')}}: {{$parcel->transferDeliveryMan->user->first_name.' '.$parcel->transferDeliveryMan->user->last_name}}</td></tr>
-                                                                            <tr><td class="text-primary">{{__('Mobile')}}: {{$parcel->transferDeliveryMan->user->phone_number}}</td></tr>
+                                                                            @php $phoneNumber=$parcel->transferDeliveryMan->user->phone_number ?? '' @endphp
                                                                     @endif
                                                                 @endif
                                                                 @if($parcel->status == 'transferred-received-by-hub')
                                                                     @if(!blank($parcel->transferDeliveryMan))
                                                                         <tr><td>{{__('transferred_by')}}: {{$parcel->transferDeliveryMan->user->first_name.' '.$parcel->transferDeliveryMan->user->last_name}}</td></tr>
-                                                                        <tr><td class="text-primary">{{__('Mobile')}}: {{$parcel->transferDeliveryMan->user->phone_number}}</td></tr>
+                                                                        @php $phoneNumber=$parcel->transferDeliveryMan->user->phone_number ?? '' @endphp
                                                                     @endif
                                                                 @endif
-                                                                <tr><td>{{$parcel->created_at != ""? date('M d, Y h:i a', strtotime($parcel->created_at)):''}}</td></tr>
+                                                                {{--<tr><td>{{$parcel->created_at != ""? date('M d, Y h:i a', strtotime($parcel->created_at)):''}}</td></tr>--}}
                                                                 {{--@if($parcel->parcel_type == 'frozen')
                                                                     <tr><td class="text-primary">{{__('pickup')}}: {{$parcel->pickup_date != ""? date('M d, Y', strtotime($parcel->pickup_date)):''}} {{$parcel->pickup_time != ""? date('h:i a', strtotime($parcel->pickup_time)):''}}</td></tr>
                                                                     <tr><td class="text-primary">{{__('delivery')}}: {{$parcel->delivery_date != ""? date('M d, Y', strtotime($parcel->delivery_date)):''}} {{$parcel->pickup_time != ""? date('h:i a', strtotime($parcel->pickup_time)):''}}</td></tr>
@@ -441,36 +446,35 @@
                                                                 @if($parcel->status == 'delivered' || $parcel->status == 'delivered-and-verified')
                                                                     <tr><td class="text-primary">{{__('delivered_at')}}: {{$parcel->event != ""? date('M d, Y h:i a', strtotime($parcel->event->created_at)):''}}</td></tr>
                                                                     <tr><td class="text-primary">{{__('delivered_by')}}: {{$parcel->deliveryMan->user->first_name.' '.$parcel->deliveryMan->user->last_name}}</td></tr>
-                                                                    <tr><td class="text-primary">{{__('Mobile')}}: {{$parcel->deliveryMan->user->phone_number}}</td></tr>
+                                                                    @php $phoneNumber=$parcel->deliveryMan->user->phone_number ?? '' @endphp
                                                                 @endif
                                                                 @if($parcel->status == 'received-by-pickup-man')
                                                                     <tr><td class="text-primary">{{__('pickup_by')}}: {{$parcel->pickupMan->user->first_name.' '.$parcel->pickupMan->user->last_name}}</td></tr>
-                                                                    <tr><td class="text-primary">{{__('Mobile')}}: {{$parcel->pickupMan->user->phone_number}}</td></tr>
+                                                                    @php $phoneNumber=$parcel->pickupMan->user->phone_number ?? '' @endphp
                                                                 @endif
                                                                 @if($parcel->status == 'received')
                                                                     <tr><td class="text-primary">{{__('pickup_by')}}: {{$parcel->pickupMan->user->first_name.' '.$parcel->pickupMan->user->last_name}}</td></tr>
-                                                                    <tr><td class="text-primary">{{__('Mobile')}}: {{$parcel->pickupMan->user->phone_number}}</td></tr>
-
+                                                                    @php $phoneNumber=$parcel->pickupMan->user->phone_number ?? '' @endphp
                                                                 @endif
                                                                 @if($parcel->status == 'pickup-assigned' || $parcel->status == 're-schedule-pickup')
                                                                     {{--                                                                .date('M d, Y g:i A', strtotime($parcel->pickupPerson->created_at))--}}
                                                                     <tr><td class="text-primary">{{__('pickup_man')}}: {{$parcel->pickupMan != ""? ($parcel->pickupMan->user->first_name.' '.$parcel->pickupMan->user->last_name ):''}}</td></tr>
-                                                                    <tr><td class="text-primary">{{__(  'Mobile')}}: {{$parcel->pickupMan != ""? $parcel->pickupMan->user->phone_number :''}}</td></tr>
+                                                                    @php $phoneNumber=$parcel->pickupMan->user->phone_number ?? '' @endphp
                                                                 @endif
                                                                 @if($parcel->status == 'return-assigned-to-merchant')
                                                                     <tr><td class="text-primary">{{__('returned_at')}}: {{$parcel->event != ""? date('M d, Y h:i a', strtotime($parcel->event->created_at)):''}}</td></tr>
                                                                     <tr><td class="text-primary">{{__('return_delivery_man')}}: {{$parcel->returnDeliveryMan != ""? ($parcel->returnDeliveryMan->user->first_name.' '.$parcel->returnDeliveryMan->user->last_name ):''}}</td></tr>
-                                                                    <tr><td class="text-primary">{{__('Mobile')}}: {{$parcel->returnDeliveryMan != ""? $parcel->returnDeliveryMan->user->phone_number :''}}</td></tr>
+                                                                    @php $phoneNumber=$parcel->returnDeliveryMan->user->phone_number ?? '' @endphp
                                                                 @endif
                                                                 @if($parcel->status == 'returned-to-merchant')
                                                                     <tr><td class="text-primary">{{__('returned_at')}}: {{$parcel->returnEvent != ""? date('M d, Y h:i a', strtotime($parcel->returnEvent->created_at)):''}}</td></tr>
                                                                     <tr><td class="text-primary">{{__('returned_by')}}: {{$parcel->returnDeliveryMan != ""? ($parcel->returnDeliveryMan->user->first_name.' '.$parcel->returnDeliveryMan->user->last_name ):''}}</td></tr>
-                                                                    <tr><td class="text-primary">{{__('Mobile')}}: {{$parcel->returnDeliveryMan != ""? ($parcel->returnDeliveryMan->user->phone_number ):''}}</td></tr>
+                                                                    @php $phoneNumber=$parcel->returnDeliveryMan->user->phone_number ?? '' @endphp
                                                                 @endif
                                                                 @if($parcel->status == 'delivery-assigned' || $parcel->status == 're-schedule-delivery')
                                                                     {{--                                                                .date('M d, Y g:i A', strtotime($parcel->deliveryPerson->created_at))--}}
                                                                     <tr><td class="text-primary">{{__('delivery_man')}}: {{$parcel->deliveryMan != ""? ($parcel->deliveryMan->user->first_name.' '.$parcel->deliveryMan->user->last_name ):''}}</td></tr>
-                                                                    <tr><td class="text-primary">{{__('Mobile')}}: {{$parcel->deliveryMan != ""? ($parcel->deliveryMan->user->phone_number ):''}}</td></tr>
+                                                                    @php $phoneNumber=$parcel->deliveryMan->user->phone_number ?? '' @endphp
                                                                 @endif
                                                                 @if($parcel->status == 'pending' || $parcel->status
                                                                     == 'pickup-assigned' || $parcel->status == 're-schedule-pickup'
@@ -481,6 +485,21 @@
                                                                 @endif
                                                             </table>
                                                         </a>
+                                                        @if($phoneNumber!='')
+                                                            <tr>
+                                                                <td class="">
+                                                                    @php $mobileCopyId=$parcel->parcel_no.'_'.$phoneNumber @endphp
+                                                                    <span class="text-primary fw-bold">Mobile: <input type="text" class="mobileToCopy text-primary  fw-bold" readonly id="{{$mobileCopyId}}" value="{{$phoneNumber}}" data-original-title="{{__('copy')}}" onclick="copyInput('{{ $mobileCopyId }}')" data-text="Copied Phone Number"></span>
+                                                                    <a href="tel:{{ $phoneNumber }}" type="button" class="callButtonRounded" style="padding-top:10px"><em class="fa-solid fa-phone"></em></a>
+                                                                </td>
+                                                                {{--<td class="text-primary">
+                                                                    <div class="copy-to-clipboard">
+                                                                        <input readonly type="text" class="text-primary small-device" id="{{ $parcel->percel_id.$phoneNumber }}" data-text="{{ __('copied') }}" value="{{$phoneNumber}}">
+                                                                        <a  href="javascript:void(0)" class="btn btn-sm btn-secondary track-url btn-tooltip" data-original-title="{{__('copied')}}"  onclick="compytracking('{{$parcel->percel_id.$phoneNumber}}')" data-text="{{ __('copied') }}"><em class="icon ni ni-copy"></em></a>
+                                                                    </div>
+                                                                </td>--}}
+                                                            </tr>
+                                                        @endif
                                                     </div>
 
                                                     <div class="nk-tb-col  tb-col-lg column-max-width">
@@ -531,12 +550,14 @@
                                                     </div>
 
                                                     <div class="nk-tb-col column-max-width">
+                                                        @php $holdNote=''; @endphp
                                                         @if($parcel->status == 'pending')
                                                             <span  class="badge text-warning">{{ __($parcel->status) }}</span><br>
                                                         @elseif($parcel->status == 'deleted')
                                                             <span  class="badge text-danger">{{ __('deleted') }}</span><br>
                                                         @elseif($parcel->status == 'cancel')
-                                                            <span  class="badge text-danger">{{ __('cancelled') }}</span><br>
+                                                            <span  class="statusLabelButton red">{{ __('cancelled') }}</span>
+                                                            <div  class="statusLabelNote red mt-1 mb-2"> <b>Reason:</b> {{ $parcel->cancelnote->cancel_note ?? 'N/A' }}</div>
                                                         @elseif($parcel->status == 'pickup-assigned')
                                                             <span  class="badge text-pink">{{ __('pickup-assigned') }}</span><br>
                                                         @elseif($parcel->status == 're-schedule-pickup')
@@ -550,36 +571,39 @@
                                                         @elseif($parcel->status == 'transferred-received-by-hub')
                                                             <span  class="badge text-prussian">{{ __('transferred-received-by-hub') }}</span><br>
                                                         @elseif($parcel->status == 'delivery-assigned')
-                                                            <span  class="statusLabelButton delivery-assigned">{{ __('delivery-assigned') }}</span><br>
+                                                            <span  class="statusLabelButton orange">{{ __('delivery-assigned') }}</span><br>
                                                         @elseif($parcel->status == 're-schedule-delivery')
-                                                            <span  class="statusLabelButton hold">{{ __('re-schedule-delivery') }}</span>
+                                                            <span  class="statusLabelButton yellow">{{ __('re-schedule-delivery') }}</span>
                                                             <span  class="badge">{{ ($parcel->delivery_date == date('Y-m-d')) ? __("today") : __('next_delivery') }}  {{ ($parcel->delivery_date)? date('d M Y', strtotime($parcel->delivery_date)):  '' }}</span>
-                                                            <br>
+                                                            @php $holdNote=$parcel->holdNote->cancel_note ?? 'N/A'; @endphp
+                                                            <div  class="statusLabelNote yellow mt-1 mb-1"> <b>Note:</b> {{ $parcel->holdNote->cancel_note ?? 'N/A' }}</div>
                                                         @elseif($parcel->status == 'returned-to-greenx')
                                                             @if($parcel->is_partially_delivered)
                                                                 <span  class="badge text-mint">{{ __('partially-delivered') }}</span><br>
                                                             @endif
-                                                            <span  class="badge text-warning">{{ __('returned-to-greenx') }}</span><br>
+                                                            <span  class="statusLabelButton red">{{ __('returned-to-greenx') }}</span>
+                                                            <div  class="statusLabelNote red mt-1 mb-2"> <b>Reason:</b> {{ $parcel->cancelnote->cancel_note ?? 'N/A' }}</div>
                                                         @elseif($parcel->status == 'return-assigned-to-merchant')
                                                             @if($parcel->is_partially_delivered)
                                                                 <span  class="badge text-mint">{{ __('partially-delivered') }}</span><br>
                                                             @endif
-                                                            <span  class="badge text-indigo">{{ __('return-assigned-to-merchant') }}</span><br>
+                                                            <span  class="statusLabelButton red">{{ __('return-assigned-to-merchant') }}</span><br>
                                                         @elseif($parcel->status == 'partially-delivered')
                                                             <span  class="badge text-mint">{{ __('partially-delivered') }}</span><br>
                                                         @elseif($parcel->status == 'delivered')
-                                                            <span  class="statusLabelButton delivered">{{ __('delivered') }}</span><br>
+                                                            <span  class="statusLabelButton green">{{ __('delivered') }}</span><br>
                                                         @elseif($parcel->status == 'delivered-and-verified')
                                                             <span  class="badge text-success">{{ __('delivered-and-verified') }}</span><br>
                                                         @elseif($parcel->status == 'returned-to-merchant')
                                                             @if($parcel->is_partially_delivered)
                                                                 <span  class="badge text-mint">{{ __('partially-delivered') }}</span><br>
                                                             @endif
-                                                            <span  class="statusLabelButton returned">{{ __('returned-to-merchant') }}</span><br>
+                                                            <span  class="statusLabelButton red">{{ __('returned-to-merchant') }}</span>
+                                                            <div  class="statusLabelNote red mt-1 mb-2"> <b>Reason:</b> {{ $parcel->cancelnote->cancel_note ?? 'N/A' }}</div>
                                                         @elseif($parcel->status == 're-request')
                                                             <span  class="badge text-warning">{{ __('re-request') }}</span><br>
                                                         @endif
-                                                        <div class="mt-3px">
+                                                        <div class="mt-6px">
                                                             <span class="statusLabelButton percel-type">{{__($parcel->parcel_type)}}</span><br><br>
                                                         </div>
 

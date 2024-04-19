@@ -623,30 +623,53 @@
 .mt-3px{
     margin-top:3px;
 }
+.mt-6px{
+    margin-top:6px;
+}
 .statusLabelButton{
     color: #fff;
     font-weight: 500;
-    padding: 2px 4px;
+    padding: 3px 6px;
     margin:2px 0px;
     border-radius: 3px;
 }
-.statusLabelButton.delivered{
+.statusLabelButton.green{
     background-color: #059669;
 }
-.statusLabelButton.delivery-assigned{
+.statusLabelButton.orange{
     background-color: #FF7400;
 }
-.statusLabelButton.hold{
+.statusLabelButton.yellow{
     background-color: #F59E0B;
 }
-.statusLabelButton.returned{
+.statusLabelButton.red{
     background-color: #DC2626;
 }
+
 .statusLabelButton.percel-type{
     color: #3B82F6;
     background-color: rgba(59, 130, 246, 0.15);
     border:1px solid #3B82F6;
+    font-size: 12px;
 }
+
+.statusLabelNote{
+    color: #151515;
+    background: rgba(54, 54, 54, 0.1);
+    border-radius: 4px;
+    padding: 4px 4px;
+    font-size: 12px;
+}
+.statusLabelNote.red{
+    color: #ea4e4e;
+    background: rgba(234, 78, 78, 0.1);
+}
+.statusLabelNote.yellow{
+    color: #ff9f00;
+    background: rgba(245, 158, 11, 0.1);
+}
+
+
 
 
 .pathao-button{
@@ -657,11 +680,16 @@
     background: rgba(79, 70, 229, 0.6);
     border-color: transparent;
 }
+.headerSearchboxWrap{
+
+    margin: 0 auto;
+}
 .searchbox{
     position: relative;
+    width: 260px;
 }
 .searchbox .search-input{
-    width: 260px;
+
     padding-right: 40px;
 }
 .searchbox .search-button{
@@ -672,8 +700,41 @@
 }
 .searchbox .search-icon{
     position: absolute;
+    height: 36px;
     right: 10px;
-    top: 5px;
+    top: 0px;
     font-size: 18px;
     color: #6e6e6e;
+    padding-top:5px;
+}
+
+
+.mobileToCopy{
+    width: 100px;
+    border:none;
+    background: transparent;
+
+}
+.mobileToCopy:focus {
+     outline: none;
+ }
+.callButtonRounded{
+    margin: 0px 4px;
+    padding: 4px;
+    padding-left: 8px;
+    background: #eee;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    color: #6e6e6e;
+    transition: 0.2s ease-in;
+}
+.callButtonRounded:hover{
+    background: #f04e23;
+    color: #fff;
+}
+
+
+.text-18px{
+    font-size: 18px;
 }

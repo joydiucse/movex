@@ -64,6 +64,9 @@ class Parcel extends Model
     public function cancelnote(){
         return $this->hasOne(ParcelEvent::class)->where('title', 'parcel_cancel_event')->latest();
     }
+    public function holdNote(){
+        return $this->hasOne(ParcelEvent::class)->where('title', 'parcel_re_schedule_delivery_event')->latest();
+    }
 
     public function pickupPerson(){
         return $this->hasOne(ParcelEvent::class)->where('title', ['assign_pickup_man_event', 'parcel_re_schedule_pickup_event'])->latest();

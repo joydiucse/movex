@@ -1,39 +1,39 @@
 <?php
 
+use App\Http\Controllers\Admin\AccountController;
+use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\BankAccountController;
 use App\Http\Controllers\Admin\BulkController;
 use App\Http\Controllers\Admin\BulkWithdrawController;
-use App\Http\Controllers\Admin\ImportExportController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DeliveryManController;
+use App\Http\Controllers\Admin\ExpenseController;
+use App\Http\Controllers\Admin\FundTransferController;
 use App\Http\Controllers\Admin\HubController;
+use App\Http\Controllers\Admin\ImportExportController;
 use App\Http\Controllers\Admin\LiveSearchController;
 use App\Http\Controllers\Admin\MerchantController;
 use App\Http\Controllers\Admin\NoticeController;
 use App\Http\Controllers\Admin\ParcelController;
 use App\Http\Controllers\Admin\PreferenceController;
+use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\SmsCampaignController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Admin\ThirdPartyController;
-use App\Http\Controllers\Merchant\ProfileController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\AuthController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\RoleController;
-use App\Http\Controllers\CommonController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\AccountController;
-use App\Http\Controllers\Admin\DeliveryManController;
+use App\Http\Controllers\Admin\WithdrawController as AdminWithdrawController;
+use App\Http\Controllers\CommonController;
 use App\Http\Controllers\Merchant\AuthController as MerchantAuthController;
 use App\Http\Controllers\Merchant\DashboardController as MerchantDashboardController;
-use App\Http\Controllers\Merchant\ParcelController as MerchantParcelController;
-use App\Http\Controllers\Merchant\WithdrawController as MerchantWithdrawController;
-use App\Http\Controllers\Admin\WithdrawController as AdminWithdrawController;
 use App\Http\Controllers\Merchant\MerchantStaffController as MerchantStaffController;
-use App\Http\Controllers\Admin\ExpenseController;
-use App\Http\Controllers\Admin\ReportController;
-use App\Http\Controllers\Admin\BankAccountController;
-use App\Http\Controllers\Admin\FundTransferController;
-use App\Http\Controllers\Admin\PathaoServiceController;
+use App\Http\Controllers\Merchant\ParcelController as MerchantParcelController;
+use App\Http\Controllers\Merchant\ProfileController;
+use App\Http\Controllers\Merchant\WithdrawController as MerchantWithdrawController;
+use App\Http\Controllers\PathaoServiceController;
 use App\Http\Controllers\TestController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -93,10 +93,12 @@ Route::group(
 
 		route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 		route::get('default', [DashboardController::class, 'report'])->name('admin.default.dashboard');
-		route::post('custom-report', [DashboardController::class, 'customDateRange'])->name('admin.default.dashboard.custom');
+        route::post('custom-report', [DashboardController::class, 'customDateRange'])->name('admin.default.dashboard.custom');
 
-		//parcel bulk import
+        //parcel bulk import
         Route::get('download-sample', [ImportExportController::class, 'export'])->name('export');
+        // GET PATHAO CITY
+
 
         Route::prefix('admin')->group(function() {
 			Route::resource('roles', RoleController::class);
@@ -526,6 +528,12 @@ Route::group(
         Route::prefix('merchant')->group(function() {
             route::get('dashboard', [MerchantDashboardController::class, 'index'])->name('merchant.dashboard');
             route::get('logout', [MerchantAuthController::class, 'logout'])->name('merchant.logout');
+
+            route::get('get-city', [LiveSearchController::class, 'getPathaoCity'])->name('pathao-get-city');
+            route::get('get-zone/{cityId}', [LiveSearchController::class, 'getPathaoZone'])->name('pathao-get-zone');
+            route::get('get-area/{ZoneId}', [LiveSearchController::class, 'getPathaoArea'])->name('pathao-get-area');
+
+
 
             //merchant profile routes
             Route::get('profile', [ProfileController::class, 'profile'])->name('merchant.profile');

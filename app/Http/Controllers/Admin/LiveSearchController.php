@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\PathaoServiceController;
 use App\Models\DeliveryMan;
 use App\Models\Merchant;
 use App\Models\Parcel;
+use App\Models\PathaoArea;
+use App\Models\PathaoCity;
+use App\Models\PathaoZone;
 use App\Models\ThirdParty;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -160,4 +164,62 @@ class LiveSearchController extends Controller
 
         return \Response::json($formatted_delivery_men);
     }
+
+    public function getPathaoCity(Request $request)
+    {
+        $term           = trim($request->q);
+
+
+        $cities = PathaoCity::where('city_name', 'like', "%{$term}%")->get();
+
+        $formatted_city   = [];
+
+        foreach ($cities as $item) {
+            $formatted_city[] = ['id' => $item->city_id, 'text' => $item->city_name];
+        }
+
+        return \Response::json($formatted_city);
+
+    }
+    public function getPathaoZone(Request $request, $cityId)
+    {
+        if(PathaoZone::where('city_id', $cityId)->count()==0) (new PathaoServiceController())->insertZones($cityId);
+
+
+        $term           = trim($request->q);
+
+
+        $zones = PathaoZone::where('city_id', $cityId)
+            ->where('zone_name', 'like', "%{$term}%")->get();
+
+        $formattedData   = [];
+
+        foreach ($zones as $item) {
+            $formattedData[] = ['id' => $item->zone_id, 'text' => $item->zone_name];
+        }
+
+        return \Response::json($formattedData);
+
+    }
+    public function getPathaoArea(Request $request, $zoneId)
+    {
+        if(PathaoArea::where('zone_id', $zoneId)->count()==0) (new PathaoServiceController())->insertArea($zoneId);
+
+
+        $term           = trim($request->q);
+
+
+        $zones = PathaoArea::where('zone_id', $zoneId)
+            ->where('area_name', 'like', "%{$term}%")->get();
+
+        $formattedData   = [];
+
+        foreach ($zones as $item) {
+            $formattedData[] = ['id' => $item->zone_id, 'text' => $item->area_name];
+        }
+
+        return \Response::json($formattedData);
+
+    }
+
 }

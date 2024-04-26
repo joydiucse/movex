@@ -25,7 +25,7 @@ if (!function_exists('settingHelper')) {
        elseif ($title == 'delivery_otp'):
             $otp_preferences = Setting::where('title','delivery_otp')->first();
             return $otp_preferences;
-            
+
         else:
             $data = Setting::where('title', $title)->first();
             if(!blank($data)):
@@ -37,4 +37,9 @@ if (!function_exists('settingHelper')) {
     }
 }
 
-
+function marchantCanEditInStatus($section='')
+{
+    if($section=='percel'){
+        return ['pending', 'pickup-assigned', 're-schedule-pickup', 'received-by-pickup-man', 'received', 'transferred-to-hub', 'transferred-received-by-hub', 'delivery-assigned', 're-schedule-delivery', 'today-attempt', 'returned-to-greenx', 'return-assigned-to-merchant'];
+    }
+}

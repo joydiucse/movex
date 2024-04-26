@@ -308,6 +308,7 @@ class ParcelController extends Controller
 
     public function parcelReceive(Request $request)
     {
+        //return 1;
         $stsCheckResponse = $this->statusCheck($request->id, "received");
         if($stsCheckResponse === true):
             $parcel = $this->parcels->get($request->id);
@@ -316,7 +317,6 @@ class ParcelController extends Controller
                 if ($parcel->status == 'received'):
                     return back()->with('danger', __('this_parcel_has_already_been_received'));
                 endif;
-
                 if($this->parcels->parcelStatusUpdate($parcel->id, 'received', $request->note, $request->hub)):
                     return redirect()->back()->with('success', __('updated_successfully'));
                 else:
@@ -332,6 +332,7 @@ class ParcelController extends Controller
 
     public function parcelDelivery(Request $request)
     {
+        //return $request;
         $stsCheckResponse = $this->statusCheck($request->id, "delivered");
         if($stsCheckResponse === true):
             $parcel = $this->parcels->get($request->id);
@@ -351,7 +352,7 @@ class ParcelController extends Controller
                     endif;
                 }
 
-                if($this->parcels->parcelStatusUpdate($parcel->id, 'delivered', $request->note)):
+                if($this->parcels->parcelStatusUpdate($parcel->id, 'delivered', $request->note)): //TODO
                     return redirect()->back()->with('success', __('updated_successfully'));
                 else:
                     return back()->with('danger', __('something_went_wrong_please_try_again'));

@@ -203,7 +203,7 @@ class ParcelRepository implements ParcelInterface {
 
             $parcel->merchant_id         = $request->merchant;
             $parcel->price               = $request->price;
-            $parcel->selling_price       = $request->selling_price;
+            //$parcel->selling_price       = $request->selling_price;
             $parcel->customer_name       = $request->customer_name;
             $parcel->customer_invoice_no = $request->customer_invoice_no;
             $parcel->customer_phone_number  = $request->customer_phone_number;
@@ -226,9 +226,14 @@ class ParcelRepository implements ParcelInterface {
             $parcel->location              = $location;
             // End charge
 
+
+             ///// product_details
+             $parcel->product_details              = $request->product_details;
+
+
             // pickup shop details
-            $parcel->pickup_shop_phone_number    = $request->shop_phone_number;
-            $parcel->pickup_address              = $request->shop_address;
+            //$parcel->pickup_shop_phone_number    = $request->shop_phone_number;
+            //$parcel->pickup_address              = $request->shop_address;
             $parcel->pickup_hub_id               = $request->pickup_hub != '' ? $request->pickup_hub : $merchant->user->hub_id;
 
             $parcel->shop_id                     = $request->shop != '' ? $request->shop : ($merchant->shops->where('default', true)->first() ? $merchant->shops->where('default', true)->first()->id : null);
@@ -360,7 +365,7 @@ class ParcelRepository implements ParcelInterface {
                 $parcel->price               = $request->price;
             }
 
-            $parcel->selling_price       = $request->selling_price;
+            //$parcel->selling_price       = $request->selling_price;
             $parcel->customer_name       = $request->customer_name;
             $parcel->customer_invoice_no = $request->customer_invoice_no;
 
@@ -381,16 +386,19 @@ class ParcelRepository implements ParcelInterface {
 
             $parcel->weight                = $request->weight;
             $parcel->charge                = $charge;
-            $parcel->cod_charge            = $cod_charge;
+            //$parcel->cod_charge            = $cod_charge;
             $parcel->vat                   = $vat;
             $parcel->total_delivery_charge = floor($total_delivery_charge);
             $parcel->payable               = ceil($payable);
             $parcel->location              = $location;
             // End charge
 
+            ///// product_details
+            $parcel->product_details              = $request->product_details;
+
             // pickup shop details
-            $parcel->pickup_shop_phone_number    = $request->shop_phone_number;
-            $parcel->pickup_address              = $request->shop_address;
+            //$parcel->pickup_shop_phone_number    = $request->shop_phone_number;
+            //$parcel->pickup_address              = $request->shop_address;
             $parcel->pickup_hub_id               = $request->pickup_hub != '' ? $request->pickup_hub : ($parcel->pickup_hub_id != '' ? $parcel->pickup_hub_id : $merchant->user->hub_id);
 
             $parcel->shop_id                     = $request->shop != '' ? $request->shop : ($merchant->shops->where('default', true)->first() ? $merchant->shops->where('default', true)->first()->id : null);
@@ -554,7 +562,8 @@ class ParcelRepository implements ParcelInterface {
 
     public function parcelStatusUpdate($id, $status, $note, $hub = null, $delivery_man = null)
     {
-         DB::beginTransaction();
+
+        DB::beginTransaction();
          try{
 
             $parcel = Parcel::find($id);

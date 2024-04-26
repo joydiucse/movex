@@ -3,7 +3,6 @@
 @section('title')
     {{__('edit').' '.__('parcel')}}
 @endsection
-
 @section('mainContent')
 
     <div class="nk-content ">
@@ -34,7 +33,20 @@
                                                 <div class="row g-gs">
                                                     <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <label class="form-label" for="customer_invoice_no">{{__('invoice')}}# *</label>
+                                                            <label class="form-label" for="customer_name">{{__('customer').' '.__('name')}} <span class="text-primary">*</span></label>
+                                                            <div class="form-control-wrap">
+                                                                <input type="text" class="form-control" id="customer_name" value="{{ old('customer_name') != ""? old('customer_name'):$parcel->customer_name }}" name="customer_name" placeholder="{{__('recipient'.' '.__('name'))}}" required>
+                                                            </div>
+                                                            @if($errors->has('customer_name'))
+                                                                <div class="nk-block-des text-danger">
+                                                                    <p>{{ $errors->first('customer_name') }}</p>
+                                                                </div>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label class="form-label" for="customer_invoice_no">{{__('invoice')}}# <span class="text-primary">*</span></label>
                                                             <div class="form-control-wrap">
                                                                 <input type="text" class="form-control" id="customer_invoice_no" value="{{ old('customer_invoice_no') != ""? old('customer_invoice_no'):$parcel->customer_invoice_no }}" name="customer_invoice_no" placeholder="{{ __('invoice_or_memo_no') }}" name="customer_invoice_no" placeholder="{{ __('invoice_or_memo_no') }}" required>
                                                             </div>
@@ -45,7 +57,19 @@
                                                             @endif
                                                         </div>
                                                     </div>
-
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label class="form-label" for="customer_phone_number">{{__('customer').' '.__('phone')}} <span class="text-primary">*</span></label>
+                                                            <div class="form-control-wrap">
+                                                                <input type="text" class="form-control" id="customer_phone_number" value="{{ old('customer_phone_number') != ""? old('customer_phone_number'):$parcel->customer_phone_number }}" name="customer_phone_number" placeholder="{{__('recipient').' '.__('phone')}}" required>
+                                                            </div>
+                                                            @if($errors->has('customer_phone_number'))
+                                                                <div class="nk-block-des text-danger">
+                                                                    <p>{{ $errors->first('customer_phone_number') }}</p>
+                                                                </div>
+                                                            @endif
+                                                        </div>
+                                                    </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label class="form-label" for="fv-full-name">{{__('weight')}}</label>
@@ -66,9 +90,9 @@
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <label class="form-label" for="fv-full-name">{{__('cod').' '.__('amount')}}({{__('tk')}})</label>
+                                                            <label class="form-label" for="fv-full-name">Cash Collection/COD(Tk) </label>
                                                             <div class="form-control-wrap">
-                                                                <input type="text" class="form-control cash-collection" id="fv-full-name" value="{{ old('price') != ""? old('price'):$parcel->price }}" name="price" placeholder="{{__('cash_amount_including_delivery_charge')}}" required>
+                                                                <input type="text" class="form-control cash-collection" id="fv-full-name" value="{{ old('price') != ""? old('price'):$parcel->price }}" name="price" placeholder="{{__('cash_amount_including_delivery_charge')}}" readonly>
                                                             </div>
                                                             @if($errors->has('price'))
                                                                 <div class="nk-block-des text-danger">
@@ -77,26 +101,9 @@
                                                             @endif
                                                         </div>
                                                     </div>
-
-
                                                     <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <label class="form-label" for="fv-full-name">{{__('selling_price')}}</label>
-                                                            <div class="form-control-wrap">
-                                                                <input type="text" class="form-control" id="fv-full-name" value="{{ old('selling_price') != ""? old('selling_price'):$parcel->selling_price }}" name="selling_price" placeholder="{{__('selling_price_of_parcel')}}">
-                                                            </div>
-                                                            @if($errors->has('selling_price'))
-                                                                <div class="nk-block-des text-danger">
-                                                                    <p>{{ $errors->first('selling_price') }}</p>
-                                                                </div>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-
-
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label class="form-label" for="area">{{__('delivery_area')}} *</label>
+                                                            <label class="form-label" for="area">{{__('delivery_area')}} <span class="text-primary">*</span></label>
                                                             <div class="form-control-wrap">
                                                                 <select class="form-select form-control form-control-lg parcel_type" name="parcel_type">
                                                                     <option value="">{{ __('select_type') }}</option>
@@ -123,77 +130,7 @@
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <label class="form-label" for="area">{{__('shop')}} </label>
-                                                            <div class="form-control-wrap">
-                                                                <select class="form-select form-control form-control-lg select-shop" data-url="{{ route('merchant.shop') }}" name="shop">
-                                                                    <option value="">{{ __('select_shop') }}</option>
-                                                                    @foreach($shops as $shop)
-                                                                        <option value="{{ $shop->id }}" {{ $parcel->shop_id == $shop->id ? 'selected' : '' }}>{{ __($shop->shop_name) }}</option>
-                                                                    @endforeach
-                                                                </select>
-                                                            </div>
-                                                            @if($errors->has('shop'))
-                                                                <div class="nk-block-des text-danger">
-                                                                    <p>{{ $errors->first('shop') }}</p>
-                                                                </div>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label class="form-label" for="shop_phone_number">{{__('pickup_number')}}</label>
-                                                            <div class="form-control-wrap">
-                                                                <input type="text" class="form-control" id="shop_phone_number" value="{{ old('shop_phone_number') ? old('shop_phone_number'):($parcel->pickup_shop_phone_number ? $parcel->pickup_shop_phone_number : $default_shop->shop_phone_number) }}" name="shop_phone_number" placeholder="{{__('pickup_number')}}">
-                                                            </div>
-                                                            @if($errors->has('shop_phone_number'))
-                                                                <div class="nk-block-des text-danger">
-                                                                    <p>{{ $errors->first('shop_phone_number') }}</p>
-                                                                </div>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label class="form-label" for="shop_address">{{__('pickup_address')}}</label>
-                                                            <div class="form-control-wrap">
-                                                                <input type="text" class="form-control" id="shop_address" value="{{ old('shop_address') ? old('shop_address'):($parcel->pickup_address ? $parcel->pickup_address : $default_shop->address) }}" name="shop_address" placeholder="{{__('pickup_address')}}">
-                                                            </div>
-                                                            @if($errors->has('shop_address'))
-                                                                <div class="nk-block-des text-danger">
-                                                                    <p>{{ $errors->first('shop_address') }}</p>
-                                                                </div>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label class="form-label" for="customer_name">{{__('customer').' '.__('name')}} *</label>
-                                                            <div class="form-control-wrap">
-                                                                <input type="text" class="form-control" id="customer_name" value="{{ old('customer_name') != ""? old('customer_name'):$parcel->customer_name }}" name="customer_name" placeholder="{{__('recipient'.' '.__('name'))}}" required>
-                                                            </div>
-                                                            @if($errors->has('customer_name'))
-                                                                <div class="nk-block-des text-danger">
-                                                                    <p>{{ $errors->first('customer_name') }}</p>
-                                                                </div>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label class="form-label" for="customer_phone_number">{{__('customer').' '.__('phone')}} *</label>
-                                                            <div class="form-control-wrap">
-                                                                <input type="text" class="form-control" id="customer_phone_number" value="{{ old('customer_phone_number') != ""? old('customer_phone_number'):$parcel->customer_phone_number }}" name="customer_phone_number" placeholder="{{__('recipient').' '.__('phone')}}" required>
-                                                            </div>
-                                                            @if($errors->has('customer_phone_number'))
-                                                                <div class="nk-block-des text-danger">
-                                                                    <p>{{ $errors->first('customer_phone_number') }}</p>
-                                                                </div>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label class="form-label" for="customer_address">{{__('customer').' '.__('address')}} *</label>
+                                                            <label class="form-label" for="customer_address">{{__('customer').' '.__('address')}} <span class="text-primary">*</span></label>
                                                             <div class="form-control-wrap">
                                                                 <textarea class="form-control" id="customer_address" placeholder="{{__('recipient').' '.__('address')}}" required name="customer_address">{{ old('customer_address') != ""? old('customer_address'):$parcel->customer_address }}</textarea>
                                                             </div>
@@ -204,6 +141,7 @@
                                                             @endif
                                                         </div>
                                                     </div>
+
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label class="form-label" for="note">{{__('note')}} </label>
@@ -217,23 +155,114 @@
                                                             @endif
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-6">
-                                                        <div class="">
-                                                             <label class="form-label" for="fv-full-name">{{__('choose_which_needed_for_parcel')}}</label>
-                                                         </div>
-                                                         <div class="row pt-1">
-                                                             <div class="col-md-6">
-                                                                 <div class="form-group">
-                                                                     <div class="preview-block">
-                                                                         <div class="custom-control custom-checkbox">
-                                                                             <input type="checkbox" class="custom-control-input" id="fragile" name="fragile" {{$parcel->fragile == 1? 'checked':''}}>
-                                                                             <label class="custom-control-label" for="fragile">{{__('liquid')}}/{{__('fragile')}}</label>
-                                                                         </div>
-                                                                     </div>
-                                                                 </div>
-                                                             </div>
-                                                         </div>
-                                                     </div>
+                                                    {{--<div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label class="form-label" for="fv-full-name">{{__('selling_price')}}</label>
+                                                            <div class="form-control-wrap">
+                                                                <input type="text" class="form-control" id="fv-full-name" value="{{ old('selling_price') != ""? old('selling_price'):$parcel->selling_price }}" name="selling_price" placeholder="{{__('selling_price_of_parcel')}}">
+                                                            </div>
+                                                            @if($errors->has('selling_price'))
+                                                                <div class="nk-block-des text-danger">
+                                                                    <p>{{ $errors->first('selling_price') }}</p>
+                                                                </div>
+                                                            @endif
+                                                        </div>
+                                                    </div>--}}
+
+
+
+
+                                                    {{--<div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label class="form-label" for="shop_phone_number">{{__('pickup_number')}}</label>
+                                                            <div class="form-control-wrap">
+                                                                <input type="text" class="form-control" id="shop_phone_number" value="{{ old('shop_phone_number') ? old('shop_phone_number'):($parcel->pickup_shop_phone_number ? $parcel->pickup_shop_phone_number : $default_shop->shop_phone_number) }}" name="shop_phone_number" placeholder="{{__('pickup_number')}}">
+                                                            </div>
+                                                            @if($errors->has('shop_phone_number'))
+                                                                <div class="nk-block-des text-danger">
+                                                                    <p>{{ $errors->first('shop_phone_number') }}</p>
+                                                                </div>
+                                                            @endif
+                                                        </div>
+                                                    </div>--}}
+                                                    {{--<div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label class="form-label" for="shop_address">{{__('pickup_address')}}</label>
+                                                            <div class="form-control-wrap">
+                                                                <input type="text" class="form-control" id="shop_address" value="{{ old('shop_address') ? old('shop_address'):($parcel->pickup_address ? $parcel->pickup_address : $default_shop->address) }}" name="shop_address" placeholder="{{__('pickup_address')}}">
+                                                            </div>
+                                                            @if($errors->has('shop_address'))
+                                                                <div class="nk-block-des text-danger">
+                                                                    <p>{{ $errors->first('shop_address') }}</p>
+                                                                </div>
+                                                            @endif
+                                                        </div>
+                                                    </div>--}}
+
+                                                    <div class="col-md-12">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="form-group">
+                                                                            <label class="form-label" for="area">{{__('shop')}} </label>
+                                                                            <div class="form-control-wrap">
+                                                                                <select class="form-select form-control form-control-lg select-shop" data-url="{{ route('merchant.shop') }}" name="shop">
+                                                                                    <option value="">{{ __('select_shop') }}</option>
+                                                                                    @foreach($shops as $shop)
+                                                                                        <option value="{{ $shop->id }}" {{ $parcel->shop_id == $shop->id ? 'selected' : '' }}>{{ __($shop->shop_name) }}</option>
+                                                                                    @endforeach
+                                                                                </select>
+                                                                            </div>
+                                                                            @if($errors->has('shop'))
+                                                                                <div class="nk-block-des text-danger">
+                                                                                    <p>{{ $errors->first('shop') }}</p>
+                                                                                </div>
+                                                                            @endif
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12 mt-4">
+                                                                        <div class="">
+                                                                            <label class="form-label" for="fv-full-name">{{__('choose_which_needed_for_parcel')}}</label>
+                                                                        </div>
+                                                                        <div class="row pt-1">
+                                                                            <div class="col-md-6">
+                                                                                <div class="form-group">
+                                                                                    <div class="preview-block">
+                                                                                        <div class="custom-control custom-checkbox">
+                                                                                            <input type="checkbox" class="custom-control-input" id="fragile" name="fragile" {{$parcel->fragile == 1? 'checked':''}}>
+                                                                                            <label class="custom-control-label" for="fragile">{{__('liquid')}}/{{__('fragile')}}</label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="form-group">
+                                                                            <label class="form-label" for="note">Product Details </label>
+                                                                            <div class="form-control-wrap">
+                                                                                <textarea class="form-control" id="productDetails" placeholder="Details of product contains" name="product_details">{{ old('product_details') != ""? old('product_details'):@$parcel->product_details }}</textarea>
+                                                                            </div>
+                                                                            @if($errors->has('note'))
+                                                                                <div class="nk-block-des text-danger">
+                                                                                    <p>{{ $errors->first('note') }}</p>
+                                                                                </div>
+                                                                            @endif
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+
                                                      <div class="col-md-6 packaging-area {{$parcel->fragile == 0? 'd-none':''}}">
                                                          <div class="form-group">
                                                              <label class="form-label" for="fv-full-name">{{__('packaging')}}</label>

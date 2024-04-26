@@ -22,12 +22,14 @@
             <div class="nk-content-inner">
                 <div class="nk-content-body">
                     <div class="nk-block-head nk-block-head-sm">
+
                         <div class="nk-block-between">
                             <div class="nk-block-head-content">
                                 <h3 class="nk-block-title page-title">{{__('lists')}}</h3>
                                 <div class="nk-block-des text-soft">
                                     <p>{{__('you_have_total')}} {{ $parcels->total() }} {{__('parcel')}}.</p>
                                 </div>
+
                             </div><!-- .nk-block-head-content -->
                             <div class="nk-block-head-content">
                                 @if(hasPermission('parcel_create'))
@@ -512,22 +514,11 @@
                                                             <tr><td>{{ @$parcel->pickup_shop_phone_number }}</td></tr>
                                                             <tr><td>{{ @$parcel->pickup_address }}</td></tr>
                                                             <tr>
-                                                                <td>
-                                                                    <table class="text-primary" width="100%">
-                                                                        <tr>
-                                                                            <td width="50%">{{__('weight').': '. $parcel->weight . __('kg')}}</td>
-                                                                            <td width="50%">{{__('charge').': '. number_format($parcel->total_delivery_charge,2).__('tk')}}</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td width="50%">{{__('COD').': '. number_format($parcel->price,2) . __('tk')}}</td>
-
-                                                                            <td width="50%">{{__('payable').': '. number_format($parcel->payable,2).__('tk')}}</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td width="50%">{{__('selling_price').': '. number_format($parcel->selling_price,2).__('tk')}}</td>
-                                                                        </tr>
-                                                                    </table>
-
+                                                                <td class="text-primary">
+                                                                    <p class="mb-0">{{__('weight').': '. $parcel->weight . __('kg')}}</p>
+                                                                    <p class="mb-0">{{__('charge').': '. number_format($parcel->total_delivery_charge,2).__('tk')}}</p>
+                                                                    <p class="mb-0">{{__('COD').': '. number_format($parcel->price,2) . __('tk')}}</p>
+                                                                    <p class="mb-0">{{__('payable').': '. number_format($parcel->payable,2).__('tk')}}</p>
                                                                 </td>
                                                             </tr>
                                                         </table>

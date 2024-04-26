@@ -133,6 +133,7 @@ class ParcelController extends Controller
 
     public function store(ParcelStoreRequest $request)
     {
+        //return $request;    // TODO
         if (@settingHelper('preferences')->where('title','create_parcel')->first()->merchant):
             if($this->parcels->store($request)):
                 return redirect()->route('merchant.parcel')->with('success', __('created_successfully'));
@@ -152,8 +153,8 @@ class ParcelController extends Controller
         $parcel= Parcel::where('parcel_no',$id)->first();
         $charges        = Charge::all();
         $cod_charges    = CodCharge::all();
-
-        if(($parcel->status == 'pending' || $parcel->status == 'pickup-assigned' || $parcel->status == 're-schedule-pickup') && $parcel->merchant->id == Sentinel::getUser()->merchant->id):
+        $marchantCanEditInStatus=marchantCanEditInStatus('percel') ?? [];
+        if((in_array($parcel->status, $marchantCanEditInStatus)) && $parcel->merchant->id == Sentinel::getUser()->merchant->id):
             return view('merchant.parcel.edit', compact('parcel', 'charges', 'cod_charges','shops','default_shop'));
         else:
             return back()->with('danger', __('you_are_not_allowed_to_update_this_parcel'));
@@ -323,7 +324,7 @@ class ParcelController extends Controller
     {
         try {
             $parcel = $this->parcels->get($request->id);
-            if ($parcel->merchant->id == Sentinel::getUser()->merchant->id && in_array($parcel->status, \Config::get('greenx.merchant_cancel_parcel'))):
+            if ($parcel->merchant->id == Sentinel::getUser()->merchant->id && in_array($parcel->status, \Config::get('greenx.merchant_cancel_parcel') ?? [])):
                 if ($parcel->status == 'cancel'):
                     return back()->with('danger', __('this_parcel_has_already_been_cancelled'));
                 endif;
@@ -334,7 +335,7 @@ class ParcelController extends Controller
                     return back()->with('danger', __('something_went_wrong_please_try_again'));
                 endif;
             else:
-                return back()->with('danger', __('you_are_not_allowed_to_cancel_this_parcel'));
+                return back()->with('danger', 'You are not allowed to cancel this parcel.');
             endif;
         } catch (\Exception $e){
             return back()->with('danger', __('something_went_wrong_please_try_again'));

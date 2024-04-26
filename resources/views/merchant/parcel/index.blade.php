@@ -13,6 +13,7 @@
 
 @php
     $pn = isset($_GET['pn']) ? $_GET['pn'] : null;
+    $marchantCanEditInStatus=marchantCanEditInStatus('percel') ?? [];
 @endphp
 
 @section('mainContent')
@@ -47,16 +48,15 @@
                                             <a href="{{ Sentinel::getUser()->user_type == 'merchant' ? route('merchant.parcel') : route('merchant.staff.parcel') }}" class="badge {{isset($slug)? 'text-fliter-btn':'btn-primary'}}"><span>{{__('all')}}</span></a>
 
                                             <a href="{{Sentinel::getUser()->user_type == 'merchant' ? route('merchant.parcel.filtering', 'pending') : route('merchant.staff.parcel.filtering', 'pending')}}" class="badge {{isset($slug)? ($slug == 'pending'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{__('pending')}}</span></a>
-                                            {{--                                                    <a href="{{route('merchant.parcel.filtering', 'pickup-assigned')}}" class="badge {{isset($slug)? ($slug == 'pickup-assigned'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{ __('pickup-assigned') }}</span></a>--}}
-                                            {{--                                                    <a href="{{route('merchant.parcel.filtering', 're-schedule-pickup')}}" class="badge {{isset($slug)? ($slug == 're-schedule-pickup'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{ __('re-schedule-pickup') }}</span></a>--}}
+                                            {{-- <a href="{{route('merchant.parcel.filtering', 'pickup-assigned')}}" class="badge {{isset($slug)? ($slug == 'pickup-assigned'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{ __('pickup-assigned') }}</span></a>--}}
+                                            {{-- <a href="{{route('merchant.parcel.filtering', 're-schedule-pickup')}}" class="badge {{isset($slug)? ($slug == 're-schedule-pickup'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{ __('re-schedule-pickup') }}</span></a>--}}
                                             <a href="{{Sentinel::getUser()->user_type == 'merchant' ? route('merchant.parcel.filtering', 'received') : route('merchant.staff.parcel.filtering', 'received')}}" class="badge {{isset($slug)? ($slug == 'received'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{ __('received_by_warehouse') }}</span></a>
                                             <a href="{{route('merchant.parcel.filtering', 'delivery-assigned')}}" class="badge {{isset($slug)? ($slug == 'delivery-assigned'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{ __('delivery-assigned') }}</span></a>
-                                            {{--        --}}
-                                                                                                <a href="{{route('merchant.parcel.filtering', 're-schedule-delivery')}}" class="badge {{isset($slug)? ($slug == 're-schedule-delivery'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{ __('re-schedule-delivery') }}</span></a>
-                                            {{--                                                    <a href="{{route('merchant.parcel.filtering', 'returned-to-greenx')}}" class="badge {{isset($slug)? ($slug == 'returned-to-greenx'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{ __('returned-to-greenx') }}</span></a>--}}
-                                            {{--                                                    <a href="{{route('merchant.parcel.filtering', 'return-assigned-to-merchant')}}" class="badge {{isset($slug)? ($slug == 'return-assigned-to-merchant'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{ __('return-assigned-to-merchant') }}</span></a>--}}
+                                            <a href="{{route('merchant.parcel.filtering', 're-schedule-delivery')}}" class="badge {{isset($slug)? ($slug == 're-schedule-delivery'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{ __('re-schedule-delivery') }}</span></a>
+                                            {{--<a href="{{route('merchant.parcel.filtering', 'returned-to-greenx')}}" class="badge {{isset($slug)? ($slug == 'returned-to-greenx'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{ __('returned-to-greenx') }}</span></a>--}}
+                                            {{--<a href="{{route('merchant.parcel.filtering', 'return-assigned-to-merchant')}}" class="badge {{isset($slug)? ($slug == 'return-assigned-to-merchant'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{ __('return-assigned-to-merchant') }}</span></a>--}}
                                             <a href="{{Sentinel::getUser()->user_type == 'merchant' ? route('merchant.parcel.filtering', 'delivered') : route('merchant.staff.parcel.filtering', 'delivered')}}" class="badge {{isset($slug)? ($slug == 'delivered'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{ __('delivered') }}</span></a>
-                                            {{--                                                    <a href="{{route('merchant.parcel.filtering', 'returned-to-merchant')}}" class="badge {{isset($slug)? ($slug == 'returned-to-merchant'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{ __('returned-to-merchant') }}</span></a>--}}
+                                            {{--<a href="{{route('merchant.parcel.filtering', 'returned-to-merchant')}}" class="badge {{isset($slug)? ($slug == 'returned-to-merchant'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{ __('returned-to-merchant') }}</span></a>--}}
                                             <a href="{{Sentinel::getUser()->user_type == 'merchant' ? route('merchant.parcel.filtering', 'cancel') : route('merchant.staff.parcel.filtering', 'cancel')}}" class="badge {{isset($slug)? ($slug == 'cancel'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{ __('cancelled') }}</span></a>
                                             {{--<a href="{{Sentinel::getUser()->user_type == 'merchant' ? route('merchant.parcel.filtering', 'deleted') :  route('merchant.staff.parcel.filtering', 'deleted')}}" class="badge {{isset($slug)? ($slug == 'deleted'? 'btn-primary':'text-fliter-btn'):'text-fliter-btn'}}"><span>{{ __('deleted') }}</span></a>--}}
                                         </div>
@@ -469,14 +469,17 @@
                                                     <div class="tb-odr-btns d-md-inline mr-1">
                                                         <a href="{{ Sentinel::getUser()->user_type == 'merchant' ? route('merchant.parcel.print',$parcel->parcel_no) : route('merchant.staff.parcel.print',$parcel->parcel_no) }}" target="_blank" class="btn btn-sm btn-warning btn-tooltip" data-original-title="{{__('print')}}"><em class="icon ni ni-printer"></em></a>
                                                     </div>
-                                                    @if($parcel->status == 'pending' || $parcel->status == 'pickup-assigned' || $parcel->status == 're-schedule-pickup')
+                                                    @if(in_array($parcel->status, $marchantCanEditInStatus))
                                                         <div class="tb-odr-btns d-md-inline mr-1">
                                                             <a href="{{ Sentinel::getUser()->user_type == 'merchant' ? route('merchant.parcel.edit', $parcel->parcel_no) : route('merchant.staff.parcel.edit', $parcel->parcel_no)}}" class="btn btn-sm btn-info btn-tooltip" data-original-title="{{__('edit')}}"><em class="icon ni ni-edit"></em></a>
                                                         </div>
+                                                    @endif
+                                                    @if($parcel->status == 'pending' || $parcel->status == 'pickup-assigned' || $parcel->status == 're-schedule-pickup')
                                                         <div class="tb-odr-btns d-md-inline mr-1">
                                                             <a href="javascript:void(0);" class="delete-parcel btn btn-sm btn-danger btn-tooltip" data-original-title="{{__('deleted')}}" id="delete-parcel" data-toggle="modal" data-target="#parcel-delete"><em class="icon ni ni-trash"></em></a>
                                                         </div>
                                                     @endif
+
                                                     @if($parcel->status == 'received-by-pickup-man' ||
                                                     $parcel->status == 'received' ||
                                                     $parcel->status == 'transferred-to-hub' ||

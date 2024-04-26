@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cd32481faf761992f84dc23a5ed683f5",
+    "content-hash": "fac98650423bfcc85f7edbaf604a5fbf",
     "packages": [
         {
             "name": "anhskohbo/no-captcha",
@@ -322,6 +322,54 @@
                 "source": "https://github.com/cartalyst/support/tree/v5.1.2"
             },
             "time": "2021-03-01T17:41:34+00:00"
+        },
+        {
+            "name": "codeboxr/pathao-courier",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/codeboxrcodehub/pathao-courier.git",
+                "reference": "3a388aaf85f114c67637e2f3ac26a3996e9fe0be"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/codeboxrcodehub/pathao-courier/zipball/3a388aaf85f114c67637e2f3ac26a3996e9fe0be",
+                "reference": "3a388aaf85f114c67637e2f3ac26a3996e9fe0be",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.0.1",
+                "illuminate/support": "~6|~7|~8",
+                "php": "^7.2|^7.3|^8.0|^8.1"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Codeboxr\\PathaoCourier\\PathaoCourierServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Codeboxr\\PathaoCourier\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Codeboxr"
+                }
+            ],
+            "description": "Bangladeshi Pathao courier service api package",
+            "support": {
+                "issues": "https://github.com/codeboxrcodehub/pathao-courier/issues",
+                "source": "https://github.com/codeboxrcodehub/pathao-courier/tree/1.0.3"
+            },
+            "time": "2023-09-20T12:47:15+00:00"
         },
         {
             "name": "composer/semver",
@@ -9931,5 +9979,5 @@
         "php": "^7.3|^8.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }

@@ -2,16 +2,36 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PathaoCity;
+use App\Models\PathaoZone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-
+use Codeboxr\PathaoCourier\Facade\PathaoCourier;
 class TestController extends Controller
 {
     public function index()
     {
-        return $this->createOrder();
-        /*$baseUrl="https://courier-api-sandbox.pathao.com";
-        $reqUrl="$baseUrl/aladdin/api/v1/orders";*/
+        $zoneId=1016;
+        return PathaoCourier::area()->area($zoneId);
+        //return PathaoCity::get();
+        $cityId=1;
+        if(PathaoZone::where('city_id', $cityId)->count()==0){
+            $zones= PathaoCourier::area()->zone($cityId);
+
+            $zones = $zones->data;
+            $zonesFormat=[];
+            foreach ($zones as $item){
+                $zonesFormat[]=[
+                    'city_id'=>$cityId,
+                    'zone_id'=>$item->zone_id,
+                    'zone_name'=>$item->zone_name,
+                ];
+            }
+            PathaoZone::insert($zonesFormat);
+        }
+
+        return PathaoZone::all();
+
     }
 
     public function getAccessToken()

@@ -215,7 +215,7 @@ class LiveSearchController extends Controller
         $formattedData   = [];
 
         foreach ($zones as $item) {
-            $formattedData[] = ['id' => $item->zone_id, 'text' => $item->area_name];
+            $formattedData[] = ['id' => $item->area_id, 'text' => $item->area_name];
         }
 
         return \Response::json($formattedData);

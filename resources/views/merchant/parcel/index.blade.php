@@ -315,6 +315,7 @@
                                                         <tr><td>{{ (@$parcel->merchant_id == 1802 && $parcel->user->user_type == 'merchant_staff' ) ? @$parcel->user->first_name.' '.@$parcel->user->last_name : @$parcel->merchant->company }}</td></tr>
                                                         <tr><td>{{ (@$parcel->merchant_id == 1802 && $parcel->user->user_type == 'merchant_staff' ) ? $parcel->user->phone_number : $parcel->merchant->phone_number}}</td></tr>
                                                         <tr><td>{{ @$parcel->pickup_address }}</td></tr>
+                                                        <tr><td class="fw-medium">@if($parcel->product_details != '') Details: {{ $parcel->product_details }} @endif</td></tr>
                                                         <tr>
                                                             <td class="text-primary">
                                                                 <p class="mb-0">{{__('weight').': '. $parcel->weight . __('kg')}}</p>

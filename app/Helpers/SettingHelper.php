@@ -4,6 +4,11 @@ use App\Models\Preference;
 use App\Models\Setting;
 use App\Models\PackageAndCharge;
 
+function getAssetVersion()
+{
+    return 'v1.00';
+}
+
 if (!function_exists('settingHelper')) {
 
     /**

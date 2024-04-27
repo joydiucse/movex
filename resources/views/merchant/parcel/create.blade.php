@@ -35,7 +35,7 @@
                                                         <div class="form-group">
                                                             <label class="form-label" for="customer_name">{{__('customer').' '.__('name')}} <span class="text-primary">*</span></label>
                                                             <div class="form-control-wrap">
-                                                                <input type="text" class="form-control" id="customer_name" value="{{ old('customer_name') != ""? old('customer_name'):@$parcel->customer_name }}" name="customer_name" placeholder="{{__('recipient'.' '.__('name'))}}" required>
+                                                                <input type="text" class="form-control" id="customer_name" value="{{ old('customer_name') != ""? old('customer_name'):@$parcel->customer_name }}" name="customer_name" placeholder="Recipient Name" required>
                                                             </div>
                                                             @if($errors->has('customer_name'))
                                                                 <div class="nk-block-des text-danger">
@@ -163,20 +163,20 @@
                                                             <div class="row">
                                                                 <div class="col-md-4">
                                                                     <div class="form-group">
-                                                                        <label class="form-label" for="">City</label>
-                                                                        <select id="city-live-search" name="city" onchange="selectZone()" class="form-control form-control-lg merchant-live-search"> </select>
+                                                                        <label class="form-label" for="">City <span class="text-primary">*</span></label>
+                                                                        <select id="city-live-search" name="city" onchange="selectZone()" class="form-control form-control-md merchant-live-search" required> </select>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-4">
                                                                     <div class="form-group">
-                                                                        <label class="form-label" for="">Zone</label>
-                                                                        <select id="zone-live-search" name="zone" onchange="selectArea()" class="form-control form-control-lg merchant-live-search" disabled> </select>
+                                                                        <label class="form-label" for="">Zone <span class="text-primary">*</span></label>
+                                                                        <select id="zone-live-search" name="zone" onchange="selectArea()" class="form-control form-control-md merchant-live-search" required> </select>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-4">
                                                                     <div class="form-group">
-                                                                        <label class="form-label" for="">Area</label>
-                                                                        <select id="area-live-search" name="area" class="form-control form-control-lg merchant-live-search" disabled> </select>
+                                                                        <label class="form-label" for="">Area <span class="text-primary">*</span></label>
+                                                                        <select id="area-live-search" name="area" class="form-control form-control-md merchant-live-search" required> </select>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -428,91 +428,23 @@
 
 @push('script')
     <script type="text/javascript">
-
-        $('#city-live-search').select2({
-            placeholder: "Select City",
-            minimumInputLength: 0,
-            ajax: {
-                type: "GET",
-                dataType: 'json',
-                url: '{{ route('pathao-get-city') }}',
-                data: function (params) {
-                    return {
-                        q: params.term // search term
-                    };
-                },
-                delay: 100,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                processResults: function (data) {
-                    return {
-                        results: data
-                    };
-                },
-                cache: true
-            }
+        $(function (){
+            $('#zone-live-search').select2({placeholder: "Select Zone", data:[]});
+            $('#area-live-search').select2({placeholder: "Select Zone", data:[]});
+            $('#zone-live-search').attr('disabled', true);
+            $('#area-live-search').attr('disabled', true)
+            $.ajax(`${baseURL}/get-city/`).then(function (res) {
+                cities=res;
+                $('#city-live-search').select2({
+                    placeholder: "Select City",
+                    minimumInputLength: 0,
+                    data: cities,
+                });
+                selectZone(false)
+            })
         });
 
 
-        function selectZone(){
-            let city=$("[name='city']").val();
-            $('#zone-live-search').attr('disabled', false);
-            $('#zone-live-search').select2({
-                placeholder: "Select City",
-                minimumInputLength: 0,
-                ajax: {
-                    type: "GET",
-                    dataType: 'json',
-                    url: `${baseURL}/merchant/get-zone/`+$("[name='city']").val(),
-                    data: function (params) {
-                        return {
-                            q: params.term // search term
-                        };
-                    },
-                    delay: 100,
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    processResults: function (data) {
-                        return {
-                            results: data
-                        };
-                    },
-                    cache: true
-                }
-            });
-            $('#zone-live-search').select2('open');
-        }
-        function selectArea(){
-            let city=$("[name='zone']").val();
-            $('#area-live-search').attr('disabled', false)
-            $('#area-live-search').select2({
-                placeholder: "Select City",
-                minimumInputLength: 0,
-                ajax: {
-                    type: "GET",
-                    dataType: 'json',
-                    url: `${baseURL}/merchant/get-area/`+$("[name='zone']").val(),
-                    data: function (params) {
-                        return {
-                            q: params.term // search term
-                        };
-                    },
-                    delay: 100,
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    processResults: function (data) {
-                        return {
-                            results: data
-                        };
-                    },
-                    cache: true
-                }
-            });
-            $('#area-live-search').select2('open');
-        }
 
     </script>
 @endpush

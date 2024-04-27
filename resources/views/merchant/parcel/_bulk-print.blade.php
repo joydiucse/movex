@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zxx" class="js">
-
+@php $assetVersion=getAssetVersion(); @endphp
 <head>
     <base href="../">
     <meta charset="utf-8">
@@ -32,7 +32,7 @@
     <!-- Page Title  -->
     <!-- StyleSheets  -->
     <link rel="stylesheet" href="{{ asset('admin/') }}/css/dashlite.css?ver=2.3.0">
-    <link id="skin-default" rel="stylesheet" href="{{ asset('admin/') }}/css/custom.css">
+    <link id="skin-default" rel="stylesheet" href="{{ asset("assets/{$assetVersion}")}}/css/style.css">
 
     <title>{{ __('parcel') . ' ' . __('details') . ' ' . __('print') }} | {{ __('app_name') }}</title>
 

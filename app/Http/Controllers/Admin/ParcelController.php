@@ -22,6 +22,7 @@ use Database\Seeders\CustomerParcelSmsSeeder;
 use Illuminate\Http\Request;
 use App\Models\Charge;
 use App\Models\CodCharge;
+use Illuminate\Support\Facades\View;
 use Maatwebsite\Excel\Facades\Excel;
 use Sentinel;
 use DB;
@@ -124,7 +125,34 @@ class ParcelController extends Controller
         endif;
 
     }
+    public function updatePathaoDeliveryArea(Request $request, $parcelId)
+    {
+        if($request->ajax()) {
+            if(hasPermission('read_all_parcel')){
+                $city = $request->city;
+                $zone = $request->zone;
+                $area = $request->area;
+                if ($city && $zone && $area) {
+                    $parcel = Parcel::find($parcelId);
+                    $parcel->pathao_city = $city;
+                    $parcel->pathao_zone = $zone;
+                    $parcel->pathao_area = $area;
+                    if ($parcel->save()) {
+                        $html = View::make('admin.parcel.parcel-details.pathao-arrow-details', compact('parcel'))->render();
+                        return response()->json(['status' => 1, 'html' => $html]);
+                    } else {
+                        return response()->json(['status' => 0, 'msg' => 'Something Wrong!']);
+                    }
+                } else {
+                    return response()->json(['status' => 0, 'msg' => 'Invalid City, Zone, Area']);
+                }
+            }else{
+                return response()->json(['status' => 0, 'msg' => 'Access Denied!']);
+            }
+        }
+        abort(403);
 
+    }
     public function parcelDelete(Request $request)
     {
         $stsCheckResponse = $this->statusCheck($request->id, "deleted");

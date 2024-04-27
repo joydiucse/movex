@@ -861,7 +861,7 @@ function tripleBase64Encode(data) {
 
 $(function (){
     var baseUrl=$('#url').val();
-    /*$('input[name="parcel_id[]"], #all').change(function() {
+    $('input[name="parcel_id[]"], #all').change(function() {
 
         if ($('input[name="parcel_id[]"]:checked').length > 0) {
             $('#addToPathaoButton').prop('disabled', false);
@@ -871,15 +871,15 @@ $(function (){
     });
 
     $('#addToPathaoButton').click(function (){
-        $('#smallModalTitle').html('Add parcels to [Pathao]');
+        $('#xlModalTitle').html('Add parcels to [Pathao]');
         let html=`
             <div class="d-flex align-items-center justify-content-center" role="status">
                 <div class="spinner-border" role="status"></div>
             </div>
         `;
-        $('#smallModalBody').html(html);
-        $('#smallModalFooter').html('<button type="button" onclick="addToPathao()" id="addToPathaoSubmitButton" class="btn btn-primary" disabled>Add to Pathao</button>');
-        $('#smallModal').modal('show');
+        $('#xlModalBody').html(html);
+        $('#xlModalFooter').html('<button type="button" onclick="addToPathao()" id="addToPathaoSubmitButton" class="btn btn-primary" disabled>Add to Pathao</button>');
+        $('#xlModal').modal('show');
         if ($('input[name="parcel_id[]"]:checked').length > 0) {
             var checkedValues = [];
             $('input[name="parcel_id[]"]:checked').each(function () {
@@ -888,7 +888,7 @@ $(function (){
             console.log(checkedValues);
             $.ajax(`${baseUrl}/admin/pathao/parcel-short-details?id=${checkedValues}`).then(function (res) {
                 if(res.status===1){
-                    $('#smallModalBody').html(res.html);
+                    $('#xlModalBody').html(res.html);
                     $('#addToPathaoSubmitButton').prop('disabled', false);
                 }else{
 
@@ -900,44 +900,225 @@ $(function (){
         }else{
             console.log('select ')
         }
-    })*/
+    })
 
 
 
 })
 
-function addToPathao() {
-    let baseUrl=$('#url').val();
-    $('#parcelDetails').css('opacity', '0.2');
-    //$('#addToPathaoSubmitButton').prop('disabled', true);
-    let html=`
-            <div class="w-100 h-100 position-absolute absolute-top-left d-flex align-items-center justify-content-center" role="status">
-                <div class="spinner-border" role="status"></div>
-            </div>
-        `;
-    $('#smallModalBody').append(html);
-    let selectedValues = [];
-    $('input[name="selected_parcel_id[]"]').each(function () {
-        selectedValues.push($(this).val());
-    });
-    if(selectedValues.length>0){
-        console.log('send')
-        $.ajax(`${baseUrl}/admin/pathao/bulk-order?id=${selectedValues}`).then(function (res) {
-            if(res.status===1){
-                console.log()
-            }else{
-
-            }
-            console.log(res)
-        }).fail(function(jqXHR, textStatus, errorThrown) {
-            console.error("Error:", errorThrown);
-        });
-    }
-
-}
 
 
 function toggleShowBalance() {
     $("#balance").removeClass("d-none");
     $("#showBalance").html("");
+}
+
+
+
+function selectZone(isOpen=true, id=''){
+    if(id!==''){
+        id=`-${id}`
+    }
+    $(`#zone-live-search${id}`).attr('disabled', false);
+    $(`#zone-live-search${id}`).val(null)
+    $(`#area-live-search${id}`).val(null)
+    $(`#area-live-search${id}`).select2({placeholder: "Select Zone", data:[]});
+    $(`#area-live-search${id}`).attr('disabled', true)
+    $(`#zone-live-search${id}`).select2({
+        placeholder: "Select Zone",
+        minimumInputLength: 0,
+        ajax: {
+            type: "GET",
+            dataType: 'json',
+            url: `${baseURL}/get-zone/`+$(`#city-live-search${id}`).val(),
+            data: function (params) {
+                return {
+                    q: params.term // search term
+                };
+            },
+            delay: 100,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            processResults: function (data) {
+                return {
+                    results: data
+                };
+            },
+            cache: true
+        }
+    });
+    if(isOpen) $(`#zone-live-search${id}`).select2('open');
+
+}
+
+function selectArea(isOpen=true, id=''){
+    if(id!==''){
+        id=`-${id}`
+    }
+    $(`#area-live-search${id}`).attr('disabled', false)
+    $(`#area-live-search${id}`).val(null)
+    $(`#area-live-search${id}`).select2({
+        placeholder: "Select Area",
+        minimumInputLength: 0,
+        ajax: {
+            type: "GET",
+            dataType: 'json',
+            url: `${baseURL}/get-area/`+$(`#zone-live-search${id}`).val(),
+            data: function (params) {
+                return {
+                    q: params.term // search term
+                };
+            },
+            delay: 100,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            processResults: function (data) {
+                return {
+                    results: data
+                };
+            },
+            cache: true
+        }
+    });
+    $(`#area-live-search${id}`).select2('open');
+}
+
+var cities=[];
+
+
+function selectCity(isOpen=true, id=''){
+    if(id!==''){
+        id=`-${id}`
+    }
+    $(`#city-live-search${id}`).select2({
+        placeholder: "Select City",
+        minimumInputLength: 0,
+        data: cities,
+    });
+    if(isOpen) $(`#city-live-search${id}`).select2('open');
+}
+
+function editPathaoDeliveryAreaForm(percelId, action='add') {
+    $(`#deliveryAreaWrap_${percelId}`).addClass('d-none');
+    $(`#pathaoDeliveryAreaForm_${percelId}`).removeClass('d-none');
+
+    $(`#zone-live-search-${percelId}`).select2({placeholder: "Select Zone", data:[]});
+    $(`#area-live-search-${percelId}`).select2({placeholder: "Select Zone", data:[]});
+    $(`#zone-live-search-${percelId}`).attr('disabled', true);
+    $(`#area-live-search-${percelId}`).attr('disabled', true)
+    if(cities.length===0){
+        $.ajax(`${baseURL}/get-city/`).then(function (res) {
+            cities=res;
+            selectCity(true, percelId)
+        })
+    }else{
+        selectCity(true, percelId)
+    }
+
+}
+
+function savePathaoDeliveryArea(percelId) {
+    let baseUrl=$('#url').val();
+    let city=$(`#city-live-search-${percelId}`).val();
+    let zone=$(`#zone-live-search-${percelId}`).val();
+    let area=$(`#area-live-search-${percelId}`).val();
+    $(`#delivery_area_error_${percelId}`).html('');
+    if(city && zone && area){
+        console.log(city , zone , area)
+        //$(`#savePathaoDeliveryArea_${percelId}`).attr('disabled', true);
+        let csrfToken = $('meta[name="csrf-token"]').attr('content');
+        $.ajax({
+            url: `${baseURL}/admin/update-percel/add-pathao-delivery-area/${percelId}`,
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
+            data: {
+                city: city,
+                zone: zone,
+                area: area,
+            },
+            success: function (response) {
+
+                if(response.status===1){
+                    $(`#pathaoDeliveryAreaForm_${percelId}`).addClass('d-none');
+                    $(`#deliveryAreaWrap_${percelId}`).html(response.html);
+                    $(`#deliveryAreaWrap_${percelId}`).removeClass('d-none');
+                }else{
+                    $(`#delivery_area_error_${percelId}`).html(response.msg);
+                }
+            },
+            error: function (xhr, status, error) {
+                // Handle error response
+                console.error(xhr, status, error);
+            }
+        });
+    }else{
+        $(`#delivery_area_error_${percelId}`).html('Please fill up all the fields.');
+    }
+}
+
+var selectedParcels=[];
+var sendToPathaApiDataIndex=0;
+function addToPathao() {
+    let noneDeliveryAreaItem = [];
+    let firstError=0;
+    $('input[name="none-delivery-area-parcel[]"]').each(function () {
+        noneDeliveryAreaItem.push($(this).val());
+        if(firstError===0){
+            firstError=$(this).val();
+        }
+    });
+    $(`#editPathaoDeliveryAreaBtn_${firstError}`).focus();
+    if(noneDeliveryAreaItem.length>0){
+        console.log('noneDeliveryAreaItem', noneDeliveryAreaItem)
+    }else{
+        $('input[name="selected_parcel_id[]"]').each(function () {
+            selectedParcels.push($(this).val());
+        });
+        if(selectedParcels.length>0){
+            sendToPathaApiDataIndex=0;
+            sendToPathaApi();
+            console.log('send')
+            //$('#addToPathaoSubmitButton').prop('disabled', true);
+        }
+    }
+
+
+}
+
+
+function sendToPathaApi(){
+    let baseUrl=$('#url').val();
+    console.log(baseUrl, selectedParcels.length, sendToPathaApiDataIndex, selectedParcels.length>=sendToPathaApiDataIndex)
+    if(sendToPathaApiDataIndex >= selectedParcels.length){
+        return false;
+    }else{
+        let parcelId=selectedParcels[sendToPathaApiDataIndex];
+        console.log(parcelId)
+        $(`#sendingPathaoApiRowoverlay_${parcelId}`).removeClass('d-none')
+        $(`#sendingStatus_${parcelId}`).html(`<div class="spinner-border" role="status"></div>`)
+        $.ajax(`${baseUrl}/admin/pathao/order/${parcelId}`).then(function (res) {
+            console.log(res)
+            $(`#sendingStatus_${parcelId}`).html(`<i class="fa-solid fa-check addToPathaoApiSuccessTick"></i>`)
+            sendToPathaApiDataIndex++;
+            sendToPathaApi();
+            /*if(res.status===1){
+
+            }else{
+
+            }
+            console.log(res)*/
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            console.error("Error:", errorThrown);
+        });
+        /*$.ajax(`https://dummyjson.com/todos/${sendToPathaApiDataIndex+1}`).then(function (res) {
+            console.log(res)
+            $(`#sendingStatus_${parcelId}`).html(`<i class="fa-solid fa-check addToPathaoApiSuccessTick"></i>`)
+            sendToPathaApiDataIndex++;
+            sendToPathaApi();
+        })*/
+    }
 }

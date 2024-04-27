@@ -226,6 +226,10 @@ class ParcelRepository implements ParcelInterface {
             $parcel->location              = $location;
             // End charge
 
+            // Pathao Ares
+             $parcel->pathao_city              = $request->city;
+             $parcel->pathao_zone              = $request->zone;
+             $parcel->pathao_area              = $request->area;
 
              ///// product_details
              $parcel->product_details              = $request->product_details;
@@ -392,6 +396,12 @@ class ParcelRepository implements ParcelInterface {
             $parcel->payable               = ceil($payable);
             $parcel->location              = $location;
             // End charge
+
+            // Pathao Ares
+            $parcel->pathao_city              = $request->city;
+            $parcel->pathao_zone              = $request->zone;
+            $parcel->pathao_area              = $request->area;
+
 
             ///// product_details
             $parcel->product_details              = $request->product_details;

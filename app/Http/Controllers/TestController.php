@@ -11,26 +11,25 @@ class TestController extends Controller
 {
     public function index()
     {
-        $zoneId=1016;
-        return PathaoCourier::area()->area($zoneId);
-        //return PathaoCity::get();
-        $cityId=1;
-        if(PathaoZone::where('city_id', $cityId)->count()==0){
-            $zones= PathaoCourier::area()->zone($cityId);
-
-            $zones = $zones->data;
-            $zonesFormat=[];
-            foreach ($zones as $item){
-                $zonesFormat[]=[
-                    'city_id'=>$cityId,
-                    'zone_id'=>$item->zone_id,
-                    'zone_name'=>$item->zone_name,
-                ];
-            }
-            PathaoZone::insert($zonesFormat);
-        }
-
-        return PathaoZone::all();
+        //return PathaoCourier::store()->list();
+        return PathaoCourier::order()
+            ->create([
+                "store_id"            => "55795", // Find in store list,
+                "merchant_order_id"   => "11111", // Unique order id
+                "recipient_name"      => "Joy", // Customer name
+                "recipient_phone"     => "01785893609", // Customer phone
+                "recipient_address"   => "Savar, Dhaka, Bangladesh", // Customer address
+                "recipient_city"      => "1", // Find in city method
+                "recipient_zone"      => "1016", // Find in zone method
+                "recipient_area"      => "12236", // Find in Area method
+                "delivery_type"       => "48", // 48 for normal delivery or 12 for on demand delivery
+                "item_type"           => "2",
+                      "special_instruction" => "Keep Calm",
+                            "item_quantity"       => "1", // item quantity
+                            "item_weight"         => "1", // parcel weight
+                            "amount_to_collect"   => "100", // amount to collect
+                            "item_description"    => "Electronics" // product details
+                        ]);
 
     }
 

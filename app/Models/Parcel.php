@@ -134,4 +134,16 @@ class Parcel extends Model
         return $this->belongsTo(ParcelReturn::class, "parcel_no", "parcel_no");
     }
 
+    public function pathaoCity(){
+        return $this->hasOne(PathaoCity::class, "city_id","pathao_city");
+    }
+    public function pathaoZone(){
+        return $this->hasOne(PathaoZone::class, "zone_id","pathao_zone")
+            ->where("city_id", $this->pathao_city);
+    }
+    public function pathaoArea(){
+        return $this->hasOne(PathaoArea::class, "area_id", "pathao_area")
+            ->where("zone_id", $this->pathao_zone);
+    }
+
 }

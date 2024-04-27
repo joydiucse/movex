@@ -131,7 +131,7 @@
 
                                         <div class="card-tools mr-n1 d-flex align-items-center">
                                             @if(hasPermission('read_all_parcel'))
-                                                <button type="button" class="btn btn-primary pathao-button mr-2 d-none" id="addToPathaoButton" disabled>
+                                                <button type="button" class="btn btn-primary pathao-button mr-2" id="addToPathaoButton" disabled>
                                                     <i class="fa-solid fa-circle-plus mr-1"></i>
                                                     <span>Add to Pathao</span>
                                                 </button>
@@ -513,6 +513,7 @@
                                                             </tr>
                                                             <tr><td>{{ @$parcel->pickup_shop_phone_number }}</td></tr>
                                                             <tr><td>{{ @$parcel->pickup_address }}</td></tr>
+                                                            <tr><td class="fw-medium">@if($parcel->product_details != '') Details: {{ $parcel->product_details }} @endif</td></tr>
                                                             <tr>
                                                                 <td class="text-primary">
                                                                     <p class="mb-0">{{__('weight').': '. $parcel->weight . __('kg')}}</p>

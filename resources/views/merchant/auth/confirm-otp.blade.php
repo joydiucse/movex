@@ -4,7 +4,7 @@
 @endsection
 
 @section('mainContent')
-
+    @php $assetVersion=getAssetVersion(); @endphp
 <div class="nk-block-head">
     <div class="nk-block-head-content">
         <h4 class="nk-block-title">{{ __('confirm').' '.__('otp') }}</h4>
@@ -68,7 +68,7 @@
 
 @endsection
 @push('script')
-    <script src="{{ asset('admin/')}}/js/scripts.js?ver=2.3.0"></script>
+    <script src="{{ asset("assets/{$assetVersion}")}}/js/scripts.js"></script>
     @include('merchant.auth.request-otp-ajax')
     <script type="text/javascript">
         $(document).ready(function () {

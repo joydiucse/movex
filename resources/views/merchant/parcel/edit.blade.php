@@ -35,7 +35,7 @@
                                                         <div class="form-group">
                                                             <label class="form-label" for="customer_name">{{__('customer').' '.__('name')}} <span class="text-primary">*</span></label>
                                                             <div class="form-control-wrap">
-                                                                <input type="text" class="form-control" id="customer_name" value="{{ old('customer_name') != ""? old('customer_name'):$parcel->customer_name }}" name="customer_name" placeholder="{{__('recipient'.' '.__('name'))}}" required>
+                                                                <input type="text" class="form-control" id="customer_name" value="{{ old('customer_name') != ""? old('customer_name'):$parcel->customer_name }}" name="customer_name" placeholder="Recipient Name" required>
                                                             </div>
                                                             @if($errors->has('customer_name'))
                                                                 <div class="nk-block-des text-danger">
@@ -154,6 +154,34 @@
                                                                 </div>
                                                             @endif
                                                         </div>
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <label class="form-label" for="">Delivery Area Details <span class="text-primary">*</span></label>
+                                                        <div class="border p-3">
+                                                            <div class="row">
+                                                                <div class="col-md-4">
+                                                                    <div class="form-group">
+                                                                        <label class="form-label" for="">City <span class="text-primary">*</span></label>
+                                                                        <select id="city-live-search" name="city"  class="form-control form-control-md merchant-live-search" required> </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <div class="form-group">
+                                                                        <label class="form-label" for="">Zone <span class="text-primary">*</span></label>
+                                                                        <select id="zone-live-search" name="zone" class="form-control form-control-md merchant-live-search" required> </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <div class="form-group">
+                                                                        <label class="form-label" for="">Area <span class="text-primary">*</span></label>
+                                                                        <select id="area-live-search" name="area" class="form-control form-control-md merchant-live-search p-0" required> </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
                                                     </div>
                                                     {{--<div class="col-md-6">
                                                         <div class="form-group">
@@ -391,3 +419,45 @@
     @include('admin.parcel.charge-script')
 @endsection
 
+@push('script')
+    <script type="text/javascript">
+        $(function (){
+            /*$('#zone-live-search').select2({placeholder: "Select Zone", data:[]});
+            $('#area-live-search').select2({placeholder: "Select Zone", data:[]});
+            $('#zone-live-search').attr('disabled', true);
+            $('#area-live-search').attr('disabled', true)*/
+            $.ajax(`${baseURL}/get-city/`).then(function (res) {
+                cities=res;
+                $('#city-live-search').select2({
+                    placeholder: "Select City",
+                    minimumInputLength: 0,
+                    data: cities,
+                });
+                $('#city-live-search').val({{$parcel->pathao_city ?? null}}).trigger("change");
+                $('#city-live-search').attr('onchange', "selectZone()");
+            });
+            $.ajax(`${baseURL}/get-zone/{{$parcel->pathao_city ?? null}}`).then(function (res) {
+                cities=res;
+                $('#zone-live-search').select2({
+                    placeholder: "Select City",
+                    minimumInputLength: 0,
+                    data: cities,
+                });
+                $('#zone-live-search').val({{$parcel->pathao_zone ?? null}}).trigger("change");
+                $('#zone-live-search').attr('onchange', "selectArea()");
+            })
+            $.ajax(`${baseURL}/get-area/{{$parcel->pathao_zone ?? null}}`).then(function (res) {
+                cities=res;
+                $('#area-live-search').select2({
+                    placeholder: "Select City",
+                    minimumInputLength: 0,
+                    data: cities,
+                });
+                $('#area-live-search').val({{$parcel->pathao_area ?? null}}).trigger("change");
+            })
+        });
+
+
+
+    </script>
+@endpush

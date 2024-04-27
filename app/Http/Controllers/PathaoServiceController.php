@@ -16,6 +16,43 @@ use Illuminate\Support\Facades\View;
 class PathaoServiceController extends Controller
 {
 
+    public function pathaoOrder(Request $request, $parcelId)
+    {
+        $parcel=Parcel::find($parcelId);
+        if($parcel){
+
+            return PathaoCourier::order()
+                ->create([
+                    "store_id"            => 55795, // Find in store list,
+                    "merchant_order_id"   => $parcel->parcel_no ?? '', // Unique order id
+                    "recipient_name"      => $parcel->customer_name ?? '', // Customer name
+                    "recipient_phone"     => $parcel->customer_phone_number ?? '', // Customer phone
+                    "recipient_address"   => $parcel->customer_address = str_pad($parcel->customer_address, 10, ' '), // Customer address
+                    "recipient_city"      => $parcel->pathao_city, // Find in city method
+                    "recipient_zone"      => $parcel->pathao_zone, // Find in zone method
+                    "recipient_area"      => $parcel->pathao_area, // Find in Area method
+                    "delivery_type"       => 48, // 48 for normal delivery or 12 for on demand delivery
+                    "item_type"           => 2, // 1 for document, 2 for parcel
+                    "special_instruction" => "",
+                    "item_quantity"       => 1, // item quantity
+                    "item_weight"         => 1, // parcel weight
+                    "amount_to_collect"   => (int)$parcel->price, // amount to collect
+                    "item_description"    => $parcel->product_details // product details
+                ]);
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+
+
     public function getCity(Request $request)
     {
         $cities=PathaoCity::all();
@@ -37,7 +74,7 @@ class PathaoServiceController extends Controller
             if ($request->has('id')) {
                 $percelId = $request->id;
                 if ($percelId != '') {
-                    $percel = Parcel::whereIn('id', explode(',', $percelId))->get();
+                    $percel = Parcel::whereIn('id', explode(',', $percelId))->orderBy('id', 'desc')->get();
                     if ($percel) {
 
                         $html = View::make('admin.parcel.parcel-details.parcel-short-details', compact('percel'))->render();
@@ -68,6 +105,7 @@ class PathaoServiceController extends Controller
     }
     public function pathaoBulkOrder(Request $request)
     {
+
         if($request->ajax()) {
             if ($request->has('id')) {
                 $percelId = $request->id;
@@ -107,7 +145,7 @@ class PathaoServiceController extends Controller
                                     'special_instruction' => '',
                                     'item_quantity' => 1,
                                     'item_weight' => $item->weight ?? '',
-                                    'amount_to_collect' => (int)$item->payable ?? 0,
+                                    'amount_to_collect' => (int)$parcel->price ?? 0,
                                     'item_description' => '',
                                 ];
                                 $response = Http::withHeaders($headers)->post($requestUrl, $body);

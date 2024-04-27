@@ -1,7 +1,7 @@
-
+@php $assetVersion=getAssetVersion(); @endphp
     <link rel="stylesheet" href="{{ asset('admin/')}}/css/dashlite.css?ver=2.3.0">
     <link id="skin-default" rel="stylesheet" href="{{ asset('admin/')}}/css/skins/theme-green.css?ver=2.3.0">
-    <link id="skin-default" rel="stylesheet" href="{{ asset('admin/')}}/css/custom.css">
+    <link id="skin-default" rel="stylesheet" href="{{ asset("assets/{$assetVersion}")}}/css/style.css">
 
 <div class="row g-gs">
     @if(hasPermission('withdraw_read'))
@@ -558,7 +558,7 @@
 </div><!-- .row -->
     <script id="fa" src="{{ asset('admin/')}}/js/bundle.js?ver=2.3.0"></script>
     <script src="{{ asset('admin/')}}/js/scripts_chart.js?ver=2.3.0"></script>
-    <script src="{{ asset('admin/')}}/js/custom.js"></script>
+    <script src="{{ asset("assets/{$assetVersion}")}}/js/main.js"></script>
     <script type="text/javascript">
         (function (NioApp, $) {
             "use strict";

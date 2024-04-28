@@ -11,7 +11,8 @@ class TestController extends Controller
 {
     public function index()
     {
-        //return PathaoCourier::store()->list();
+        return PathaoCourier::store()->list();
+        return PathaoCourier::store()->list();
         return PathaoCourier::order()
             ->create([
                 "store_id"            => "55795", // Find in store list,

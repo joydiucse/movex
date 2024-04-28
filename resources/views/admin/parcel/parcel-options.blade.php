@@ -1,4 +1,4 @@
-<div class="nk-tb-col nk-tb-col-tools">
+<div class="nk-tb-col nk-tb-col-tools position-relative">
     <ul class="nk-tb-actions gx-1">
         <li>
             <span type="button" class="btn btn-icon btn-trigger btn-tooltip" data-original-title="{{__('copy')}}" onclick="copyInput('{{ $parcel->parcel_no }}')"><em class="icon ni ni-copy"></em></span>
@@ -153,4 +153,21 @@
             </div>
         </li>
     </ul>
+    <div class="position-absolute absolute-bottom-right">
+        @if($parcel->pathao_consignment_id)
+            <div class="dropdown">
+                <a href="#" onclick="getPathaoStatus('{{$parcel->pathao_consignment_id}}')" class="dropdown-toggle fw-medium sentToPathaoBtn" data-original-title="Sent To Pathao Api" data-toggle="dropdown">
+                    Pathao <i class="fa-solid fa-circle-check text-18px ml-1"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right dropdown-menu-top bg-green" style="width: 260px">
+                    <div class="link-list-opt no-bdr p-0" id="pathao_status_{{$parcel->pathao_consignment_id}}">
+                        <div class="d-flex justify-content-center align-items-center" style="min-height: 100px;">
+                            <div class="spinner-border text-primary" role="status"></div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        @endif
+    </div>
 </div>

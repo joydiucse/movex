@@ -7,7 +7,14 @@
         </tr>
         </thead>
         <tbody>
+        @php
+            $itemCount=0;
+        @endphp
         @foreach ($percel as $key=>$item)
+            @php
+             if($item->pathao_consignment_id) continue;
+             $itemCount++
+            @endphp
             <tr class="position-relative">
                 <td class="text-center pl-2 pr-2 font-weight-bold align-middle">
                     {{ $key+1 }}
@@ -24,14 +31,14 @@
 
                         </small>
                         <div id="deliveryAreaWrap_{{$item->id}}">
-                            @if($item->pathao_city && $item->pathao_zone && $item->pathao_area )
+                            @if($item->pathao_city && $item->pathao_zone )
                                 @php
                                     $city=$item->pathaoCity->city_name ?? '';
                                     $zone=$item->pathaoZone->zone_name ?? '';
                                     $area=$item->pathaoArea->area_name ?? '';
                                 @endphp
 
-                                    @if($city && $zone && $area )
+                                    @if($city && $zone )
                                         <p class="mb-0 text-primary fw-medium">
                                             <span class="">Pathao Delivery Area:</span>
                                             <span>{{$city}}</span>
@@ -71,7 +78,7 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label class="form-label" for="">Area <span class="text-primary">*</span></label>
-                                                    <select id="area-live-search-{{$item->id}}" name="area" class="form-control form-control-md merchant-live-search" required> </select>
+                                                    <select id="area-live-search-{{$item->id}}" name="area" class="form-control form-control-md merchant-live-search" > </select>
                                                 </div>
                                             </div>
                                         </div>
@@ -91,6 +98,10 @@
         @endforeach
         </tbody>
     </table>
-
+    @if($itemCount==0)
+        <div class="text-center py-4 text-lg-center">
+            No Parcels Found!
+        </div>
+    @endif
 </div>
 

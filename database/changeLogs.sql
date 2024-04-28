@@ -126,3 +126,8 @@ insert  into `pathao_cities`(`id`,`city_id`,`city_name`,`created_at`,`updated_at
 insert  into `pathao_cities`(`id`,`city_id`,`city_name`,`created_at`,`updated_at`) values (62,3,'Sylhet','0000-00-00 00:00:00','0000-00-00 00:00:00');
 insert  into `pathao_cities`(`id`,`city_id`,`city_name`,`created_at`,`updated_at`) values (63,13,'Tangail','0000-00-00 00:00:00','0000-00-00 00:00:00');
 insert  into `pathao_cities`(`id`,`city_id`,`city_name`,`created_at`,`updated_at`) values (64,36,'Thakurgaon ','0000-00-00 00:00:00','0000-00-00 00:00:00');
+
+
+ALTER TABLE `parcels`
+  ADD COLUMN `pathao_consignment_id` VARCHAR(50) NULL AFTER `pathao_area`,
+  ADD COLUMN `pathao_logs` TEXT NULL AFTER `pathao_consignment_id`;

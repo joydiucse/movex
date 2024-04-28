@@ -228,6 +228,7 @@ Route::group(['middleware'=>'XSS'], function() {
                 Route::get('pathao/parcel-short-details', [PathaoServiceController::class, 'parcelDetails']);
                 Route::get('pathao/bulk-order', [PathaoServiceController::class, 'pathaoBulkOrder']);
                 Route::get('pathao/order/{parcelId}', [PathaoServiceController::class, 'pathaoOrder']);
+                Route::get('pathao/get-pathao-parcel-status/{consignmentId}', [PathaoServiceController::class, 'pathaoOrderStatus']);
 
 
                 //for getting shops of selected merchant on select shop dropdown

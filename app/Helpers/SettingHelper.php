@@ -6,7 +6,7 @@ use App\Models\PackageAndCharge;
 
 function getAssetVersion()
 {
-    return 'v1.00';
+    return 'v1.01';
 }
 
 if (!function_exists('settingHelper')) {

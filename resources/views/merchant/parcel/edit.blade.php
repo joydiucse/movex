@@ -175,7 +175,7 @@
                                                                 <div class="col-md-4">
                                                                     <div class="form-group">
                                                                         <label class="form-label" for="">Area <span class="text-primary">*</span></label>
-                                                                        <select id="area-live-search" name="area" class="form-control form-control-md merchant-live-search p-0" required> </select>
+                                                                        <select id="area-live-search" name="area" class="form-control form-control-md merchant-live-search p-0"> </select>
                                                                     </div>
                                                                 </div>
                                                             </div>
